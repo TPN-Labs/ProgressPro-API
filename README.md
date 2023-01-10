@@ -26,6 +26,7 @@ The application was built with:
 - [HikariCP 5.0](https://github.com/brettwooldridge/HikariCP) as datasource abstraction of driver implementation
 - [Postgres 42.5](https://github.com/postgres/postgres) as database
 - [Exposed 0.40](https://github.com/JetBrains/Exposed) as SQL framework to persistence layer
+- [New Relic](https://github.com/newrelic/java-agent-api) for Observability (tracking performance and error rates)
 
 ### 📁 Project Structure
 
