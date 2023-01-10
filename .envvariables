@@ -1,0 +1,8 @@
+AWS_ACCESS_KEY_ID=to-be-completed;
+AWS_SECRET_ACCESS_KEY=to-be-completed;
+SENTRY_DSN=to-be-completed;
+DB_HOST=127.0.0.1;
+DB_USER=postgres;
+DB_PASS=;
+DB_PORT=5432;
+DB_NAME=local_progresspro;
