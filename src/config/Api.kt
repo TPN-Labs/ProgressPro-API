@@ -1,5 +1,6 @@
 package com.progressp.config
 
+import com.progressp.api.config.configApi
 import com.progressp.api.user.preferenceApi
 import com.progressp.api.user.usersApi
 import com.progressp.database.IDatabaseFactory
@@ -16,6 +17,7 @@ fun Route.api() {
     val userService: IUserService by inject()
 
     route("/api") {
+        configApi()
         usersApi(userService)
         preferenceApi(preferenceService, dbService)
     }

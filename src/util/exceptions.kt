@@ -7,7 +7,8 @@ abstract class ApiException(val clientMessage: String, logMessage: String, val s
 
 class JwtSignatureFails(cause: String) :
     ApiException("Authentication has failed", cause, HttpStatusCode.BadRequest)
-
+class CurrencyCodeNotFound(code: String) :
+    ApiException("Currency code not found", "Currency code: $code not found", HttpStatusCode.NotFound)
 class InternalServerError(message: String) :
     ApiException("Internal server error", message, HttpStatusCode.InternalServerError)
 
