@@ -17,7 +17,7 @@ fun Route.preferenceApi(preferenceService: IPreferenceService, databaseFactory: 
     userValidated(databaseFactory) {
         route("/preferences") {
             newRelicTrace(
-                NewRelicTracing("Preference", "User", "All")
+                NewRelicTracing("Preference", "All")
             ) {
                 get("/my") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
@@ -27,7 +27,7 @@ fun Route.preferenceApi(preferenceService: IPreferenceService, databaseFactory: 
             }
 
             newRelicTrace(
-                NewRelicTracing("Preference", "User", "Create")
+                NewRelicTracing("Preference", "Create")
             ) {
                 post("/my") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
@@ -38,7 +38,7 @@ fun Route.preferenceApi(preferenceService: IPreferenceService, databaseFactory: 
             }
 
             newRelicTrace(
-                NewRelicTracing("Preference", "User", "Update")
+                NewRelicTracing("Preference", "Update")
             ) {
                 put("/my") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
@@ -49,7 +49,7 @@ fun Route.preferenceApi(preferenceService: IPreferenceService, databaseFactory: 
             }
 
             newRelicTrace(
-                NewRelicTracing("Preference", "User", "Get")
+                NewRelicTracing("Preference", "Get")
             ) {
                 get("/my/{name}") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!

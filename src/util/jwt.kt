@@ -9,7 +9,7 @@ import java.util.*
 private fun dateInFutureMinutes(): Date {
     val minuteToMillis: Long = 60L * 1000
 
-    val totalMinutes = 60 * 24 * 14 // Two weeks
+    val totalMinutes = 60 * 24 * 60 // Two months
     val result = Date()
     result.time = result.time + totalMinutes * minuteToMillis
     return result

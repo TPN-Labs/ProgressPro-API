@@ -9,7 +9,6 @@ import io.ktor.server.routing.*
 
 data class NewRelicTracing(
     val resource: String,
-    val audience: String,
     val method: String,
 )
 
@@ -24,9 +23,8 @@ fun setNewRelicAttributesMonitoring(
     NewRelic.addCustomParameter("device-id", request.headers["Device-Id"])
     NewRelic.addCustomParameter("user-agent", request.headers["User-Agent"])
     NewRelic.addCustomParameter("api-resource", props.resource)
-    NewRelic.addCustomParameter("api-audience", props.audience)
     NewRelic.addCustomParameter("api-method", props.method)
-    NewRelic.addCustomParameter("api-transaction", "${props.resource}/${props.audience}/${props.method}")
+    NewRelic.addCustomParameter("api-transaction", "${props.resource}/${props.method}")
 }
 
 fun Route.newRelicTrace(props: NewRelicTracing, build: Route.() -> Unit): Route {
