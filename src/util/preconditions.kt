@@ -42,6 +42,17 @@ class Preconditions(private val client: IDatabaseFactory) {
         return StudentGender.values().any { it.code == gender }
     }
 
+    fun checkIfStudentHeightIsValid(height: Double): Boolean {
+        return height > 0.0
+    }
+
+    suspend fun checkIfStudentExists(studentId: String): Boolean {
+        return client.dbQuery {
+            val studentInDatabase = StudentsTable.select { (StudentsTable.id eq UUID.fromString(studentId)) }.firstOrNull()
+            studentInDatabase != null
+        }
+    }
+
     suspend fun checkIfUsernameExists(username: String): Boolean {
         return client.dbQuery {
             val userInDatabase = UsersTable.select { (UsersTable.username eq username.lowercase()) }.firstOrNull()

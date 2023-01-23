@@ -24,6 +24,8 @@ class StudentNotFound(id: String) :
     ApiException("Student not found", "Student $id not found", HttpStatusCode.NotFound)
 class StudentGenderNotFound(userId: String, gender: Int) :
     ApiException("Student is invalid", "User $userId submited invalid gender $gender for student", HttpStatusCode.BadRequest)
+class StudentHeightIsInvalid(userId: String, height: Double) :
+    ApiException("Student is invalid", "User $userId submited invalid height $height for student", HttpStatusCode.BadRequest)
 class StudentNotYours(userId: String, studentId: String) :
     ApiException("Student not found", "User $userId tried to update student $studentId", HttpStatusCode.NotFound)
 class UserEmailExists(email: String) :

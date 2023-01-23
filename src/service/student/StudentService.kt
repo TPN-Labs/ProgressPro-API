@@ -41,6 +41,8 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
 
         if (!Preconditions(databaseFactory).checkIfStudentGenderExists(studentProps.gender))
             throw StudentGenderNotFound(tokenUserId, studentProps.gender)
+        if (!Preconditions(databaseFactory).checkIfStudentHeightIsValid(studentProps.height))
+            throw StudentHeightIsInvalid(tokenUserId, studentProps.height)
 
         return databaseFactory.dbQuery {
             val student = Student.new {
@@ -59,10 +61,12 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
     override suspend fun userUpdate(token: String, studentProps: Student.New): Student.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 
-        if(!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, studentProps.id!!))
-            throw StudentNotYours(tokenUserId, studentProps.id)
         if (!Preconditions(databaseFactory).checkIfStudentGenderExists(studentProps.gender))
             throw StudentGenderNotFound(tokenUserId, studentProps.gender)
+        if (!Preconditions(databaseFactory).checkIfStudentHeightIsValid(studentProps.height))
+            throw StudentHeightIsInvalid(tokenUserId, studentProps.height)
+        if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, studentProps.id!!))
+            throw StudentNotYours(tokenUserId, studentProps.id)
 
         return databaseFactory.dbQuery {
             val student = getStudent(studentProps.id)
@@ -80,7 +84,9 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
     override suspend fun userDelete(token: String, studentProps: Student.Delete): Student.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 
-        if(!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, studentProps.id!!))
+        if(!Preconditions(databaseFactory).checkIfStudentExists(studentProps.id))
+            throw StudentNotFound(studentProps.id)
+        if(!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, studentProps.id))
             throw StudentNotYours(tokenUserId, studentProps.id)
 
         return databaseFactory.dbQuery {
