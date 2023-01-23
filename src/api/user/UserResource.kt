@@ -16,7 +16,7 @@ fun Route.usersApi(userService: IUserService) {
     admin {
         route("/users") {
             newRelicTrace(
-                NewRelicTracing("User", "Admin", "All")
+                NewRelicTracing("User", "All")
             ) {
                 get("/page/{page}") {
                     val users = userService.adminRead(call.parameters["page"]!!)
@@ -29,7 +29,7 @@ fun Route.usersApi(userService: IUserService) {
                 }
             }
             newRelicTrace(
-                NewRelicTracing("User", "Admin", "Update")
+                NewRelicTracing("User", "Update")
             ) {
                 put("/") {
                     val user = userService.adminUpdate(call.receive())
@@ -37,7 +37,7 @@ fun Route.usersApi(userService: IUserService) {
                 }
             }
             newRelicTrace(
-                NewRelicTracing("User", "Admin", "Delete")
+                NewRelicTracing("User", "Delete")
             ) {
                 delete("/{id}") {
                     val user = userService.adminDelete(call.parameters["id"]!!)
@@ -49,7 +49,7 @@ fun Route.usersApi(userService: IUserService) {
 
     route("/auth") {
         newRelicTrace(
-            NewRelicTracing("Auth", "User", "Login")
+            NewRelicTracing("Auth", "Login")
         ) {
             post("/login") {
                 val userDetails = call.receive<User.Login>()
@@ -62,7 +62,7 @@ fun Route.usersApi(userService: IUserService) {
         }
 
         newRelicTrace(
-            NewRelicTracing("Auth", "User", "Register")
+            NewRelicTracing("Auth", "Register")
         ) {
             post("/register") {
                 val newUser = call.receive<User.Register>()
@@ -72,7 +72,7 @@ fun Route.usersApi(userService: IUserService) {
         }
 
         newRelicTrace(
-            NewRelicTracing("Auth", "User", "Delete")
+            NewRelicTracing("Auth", "Delete")
         ) {
             post("/delete") {
                 val token = call.request.authorization()?.removePrefix("Bearer ")!!

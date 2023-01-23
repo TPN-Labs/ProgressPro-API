@@ -2,6 +2,8 @@ package com.progressp
 
 import com.progressp.database.DatabaseFactory
 import com.progressp.database.IDatabaseFactory
+import com.progressp.service.student.IStudentService
+import com.progressp.service.student.StudentService
 import com.progressp.service.user.IPreferenceService
 import com.progressp.service.user.IUserService
 import com.progressp.service.user.PreferenceService
@@ -11,6 +13,7 @@ import org.koin.dsl.module
 val serviceKoinModule = module {
     single<IUserService> { UserService(get()) }
     single<IPreferenceService> { PreferenceService(get()) }
+    single<IStudentService> { StudentService(get()) }
 }
 
 val databaseKoinModule = module {

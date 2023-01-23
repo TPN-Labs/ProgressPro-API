@@ -4,6 +4,10 @@ import com.progressp.models.log.AuthLogsTable
 import com.progressp.models.user.PreferencesTable
 import com.progressp.models.user.UsersTable
 import com.newrelic.api.agent.Trace
+import com.progressp.models.student.StudentsMeetingsTable
+import com.progressp.models.student.StudentsNotesTable
+import com.progressp.models.student.StudentsSessionsTable
+import com.progressp.models.student.StudentsTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +67,10 @@ class DatabaseFactory(
             SchemaUtils.create(
                 AuthLogsTable,
                 PreferencesTable,
+                StudentsTable,
+                StudentsMeetingsTable,
+                StudentsNotesTable,
+                StudentsSessionsTable,
                 UsersTable,
             )
         }
