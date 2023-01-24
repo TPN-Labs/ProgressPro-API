@@ -26,8 +26,16 @@ class StudentGenderNotFound(userId: String, gender: Int) :
     ApiException("Student is invalid", "User $userId submited invalid gender $gender for student", HttpStatusCode.BadRequest)
 class StudentHeightIsInvalid(userId: String, height: Double) :
     ApiException("Student is invalid", "User $userId submited invalid height $height for student", HttpStatusCode.BadRequest)
+class StudentMeetingNotFound(id: String) :
+    ApiException("Meeting not found", "Meeting $id not found", HttpStatusCode.NotFound)
 class StudentNotYours(userId: String, studentId: String) :
-    ApiException("Student not found", "User $userId tried to update student $studentId", HttpStatusCode.NotFound)
+    ApiException("Student not found", "User $userId tried to update student $studentId", HttpStatusCode.BadRequest)
+class StudentSessionNotFound(id: String) :
+    ApiException("Student session not found", "Student session $id not found", HttpStatusCode.NotFound)
+class StudentSessionTotalInvalid(value: Int) :
+    ApiException("Total value si invalid", "Value: $value is invalid", HttpStatusCode.BadRequest)
+class StudentSessionStatusInvalid(userId: String, status: Int) :
+    ApiException("Session status si invalid", "User $userId tried to update a session with status $status", HttpStatusCode.BadRequest)
 class UserEmailExists(email: String) :
     ApiException("E-Mail already exists", "Email already exists: $email", HttpStatusCode.BadRequest)
 

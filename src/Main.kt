@@ -60,11 +60,11 @@ fun Application.module() {
         }
     }
 
-    Sentry.init { options ->
-        options.dsn = System.getenv("SENTRY_DSN") ?: "https://to_be_completed.ingest.sentry.io/xxxyyy"
-        /*  Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-            We recommend adjusting this value in production. */
-        options.tracesSampleRate = 0.5
+    if(System.getenv("SENTRY_DSN") != null) {
+        Sentry.init { options ->
+            options.dsn = System.getenv("SENTRY_DSN")
+            options.tracesSampleRate = 0.5
+        }
     }
 
     val factory: IDatabaseFactory by inject()

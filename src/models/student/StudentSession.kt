@@ -14,10 +14,11 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 object StudentsSessionsTable : UUIDTable("students_sessions") {
+    val studentId: Column<EntityID<UUID>> = reference("student_id", StudentsTable, onDelete = ReferenceOption.CASCADE)
     val instructorId: Column<EntityID<UUID>> = reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
     val status: Column<Int> = integer("status")
     val name: Column<String> = varchar("name", 64)
-    val total: Column<Int> = integer("total")
+    val meetings: Column<Int> = integer("meetings")
     val value: Column<Int> = integer("value")
     val currencyCode: Column<String> = varchar("currency_code", 8).default("USD")
     val startAt: Column<LocalDate> = date("start_at").default(LocalDate.now())
@@ -29,10 +30,11 @@ object StudentsSessionsTable : UUIDTable("students_sessions") {
 class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<StudentSession>(StudentsSessionsTable)
 
+    var studentId by StudentsSessionsTable.studentId
     var instructorId by StudentsSessionsTable.instructorId
     var status by StudentsSessionsTable.status
     var name by StudentsSessionsTable.name
-    var total by StudentsSessionsTable.total
+    var meetings by StudentsSessionsTable.meetings
     var value by StudentsSessionsTable.value
     var currencyCode by StudentsSessionsTable.currencyCode
     var startAt by StudentsSessionsTable.startAt
@@ -42,11 +44,11 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
 
     data class New(
         val id: String?,
-        val instructorId: String,
+        val studentId: String,
         val status: Int,
         val name: String,
-        val total: Int,
         val value: Int,
+        val meetings: Int,
         val currencyCode: String,
         val startAt: String,
         val endAt: String,
@@ -58,10 +60,36 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
         val name: String,
     ) {
         companion object {
-            fun fromRow(row: StudentSession): Response = Response(
+            fun fromDbRow(row: StudentSession): Response = Response(
                 id = row.id.toString(),
                 status = row.status,
                 name = row.name,
+            )
+        }
+    }
+
+    data class Page(
+        val id: String,
+        val studentId: String,
+        val status: Int,
+        val name: String,
+        val value: Int,
+        val meetings: Int,
+        val currencyCode: String,
+        val startAt: LocalDate,
+        val endAt: LocalDate,
+    ) {
+        companion object {
+            fun fromDbRow(row: StudentSession): Page = Page(
+                id = row.id.toString(),
+                studentId = row.studentId.toString(),
+                status = row.status,
+                name = row.name,
+                value = row.value,
+                meetings = row.meetings,
+                currencyCode = row.currencyCode,
+                startAt = row.startAt,
+                endAt = row.endAt,
             )
         }
     }

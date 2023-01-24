@@ -1,8 +1,11 @@
 package com.progressp.util
 
+import com.progressp.config.CurrencyCode
 import com.progressp.config.EMAIL_ADDRESS_PATTERN
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.StudentGender
+import com.progressp.models.student.StudentSessionStatus
+import com.progressp.models.student.StudentsSessionsTable
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.PreferenceName
 import com.progressp.models.user.UsersTable
@@ -13,6 +16,14 @@ import java.util.UUID
 
 class Preconditions(private val client: IDatabaseFactory) {
     private val logger = LoggerFactory.getLogger(this::class.java)
+
+    fun checkIfCurrencyExists(currencyCode: String): Boolean {
+        return CurrencyCode.values().any { it.toString() == currencyCode }
+    }
+
+    fun checkIfValueIsValid(value: Int): Boolean {
+        return value >= 0
+    }
 
     suspend fun checkIfUserExists(userId: String): Boolean {
         logger.debug("Checking if user exists: $userId")
@@ -43,7 +54,14 @@ class Preconditions(private val client: IDatabaseFactory) {
     }
 
     fun checkIfStudentHeightIsValid(height: Double): Boolean {
-        return height > 0.0
+        return height >= 0.0
+    }
+
+    suspend fun checkIfSessionsExists(sessionId: String): Boolean {
+        return client.dbQuery {
+            val userInDatabase = StudentsSessionsTable.select { (StudentsSessionsTable.id eq UUID.fromString(sessionId)) }.firstOrNull()
+            userInDatabase != null
+        }
     }
 
     suspend fun checkIfStudentExists(studentId: String): Boolean {
@@ -51,6 +69,10 @@ class Preconditions(private val client: IDatabaseFactory) {
             val studentInDatabase = StudentsTable.select { (StudentsTable.id eq UUID.fromString(studentId)) }.firstOrNull()
             studentInDatabase != null
         }
+    }
+
+    fun checkIfSessionStatusExists(status: Int): Boolean {
+        return StudentSessionStatus.values().any { it.code == status }
     }
 
     suspend fun checkIfUsernameExists(username: String): Boolean {
@@ -69,4 +91,15 @@ class Preconditions(private val client: IDatabaseFactory) {
             studentInDb != null
         }
     }
+
+    suspend fun checkIfUserCanUpdateStudentSession(userId: String, sessionId: String): Boolean {
+        return client.dbQuery {
+            val sessionInDb = StudentsSessionsTable.select {
+                (StudentsSessionsTable.instructorId eq UUID.fromString(userId)) and
+                        (StudentsSessionsTable.id eq UUID.fromString(sessionId))
+            }.firstOrNull()
+            sessionInDb != null
+        }
+    }
+
 }

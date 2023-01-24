@@ -13,7 +13,7 @@ import java.util.UUID
 
 object StudentsMeetingsTable : UUIDTable("students_meetings") {
     val instructorId: Column<EntityID<UUID>> = reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
-    val studentId: Column<EntityID<UUID>> = reference("student_id", StudentsSessionsTable, onDelete = ReferenceOption.CASCADE)
+    val studentId: Column<EntityID<UUID>> = reference("student_id", StudentsTable, onDelete = ReferenceOption.CASCADE)
     val sessionId: Column<EntityID<UUID>> = reference("session_id", StudentsSessionsTable, onDelete = ReferenceOption.CASCADE)
     val startAt: Column<LocalDateTime> = datetime("start_at").default(LocalDateTime.now())
     val endAt: Column<LocalDateTime> = datetime("end_at").default(LocalDateTime.now())
@@ -34,7 +34,6 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
 
     data class New(
         val id: String?,
-        val instructorId: String,
         val studentId: String,
         val sessionId: String,
         val startAt: String,
@@ -54,16 +53,25 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
             )
         }
     }
-}
 
-enum class PreferenceName {
-    SHOW_ADS,
-    NOTIFICATION_STATISTICS,
-    FCM_TOKEN,
-    DISPLAY_NAME,
-}
+    data class Page(
+        val id: String,
+        val instructorId: String,
+        val studentId: String,
+        val sessionId: String,
+        val startAt: LocalDateTime,
+        val endAt: LocalDateTime,
+    ) {
+        companion object {
+            fun fromDbRow(row: StudentMeeting): Page = Page(
+                id = row.id.toString(),
+                instructorId = row.instructorId.toString(),
+                studentId = row.studentId.toString(),
+                sessionId = row.sessionId.toString(),
+                startAt = row.startAt,
+                endAt = row.endAt
+            )
+        }
+    }
 
-enum class PreferenceValue(val optionValue: String) {
-    ENABLED("1"),
-    DISABLED("0"),
 }
