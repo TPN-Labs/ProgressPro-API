@@ -15,7 +15,8 @@ import java.util.UUID
 
 object StudentsSessionsTable : UUIDTable("students_sessions") {
     val studentId: Column<EntityID<UUID>> = reference("student_id", StudentsTable, onDelete = ReferenceOption.CASCADE)
-    val instructorId: Column<EntityID<UUID>> = reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
+    val instructorId: Column<EntityID<UUID>> =
+        reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
     val status: Column<Int> = integer("status")
     val name: Column<String> = varchar("name", 64)
     val meetings: Column<Int> = integer("meetings")
@@ -70,7 +71,7 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
 
     data class Page(
         val id: String,
-        val studentId: String,
+        val student: Student.Response,
         val status: Int,
         val name: String,
         val value: Int,
@@ -80,17 +81,23 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
         val endAt: LocalDate,
     ) {
         companion object {
-            fun fromDbRow(row: StudentSession): Page = Page(
-                id = row.id.toString(),
-                studentId = row.studentId.toString(),
-                status = row.status,
-                name = row.name,
-                value = row.value,
-                meetings = row.meetings,
-                currencyCode = row.currencyCode,
-                startAt = row.startAt,
-                endAt = row.endAt,
-            )
+            fun fromDbRow(row: StudentSession): Page {
+                val student = Student.findById(row.studentId)!!
+                return Page(
+                    id = row.id.toString(),
+                    student = Student.Response(
+                        id = row.studentId.toString(),
+                        fullName = student.fullName,
+                    ),
+                    status = row.status,
+                    name = row.name,
+                    value = row.value,
+                    meetings = row.meetings,
+                    currencyCode = row.currencyCode,
+                    startAt = row.startAt,
+                    endAt = row.endAt
+                )
+            }
         }
     }
 }

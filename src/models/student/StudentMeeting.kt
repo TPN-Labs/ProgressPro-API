@@ -56,21 +56,30 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
 
     data class Page(
         val id: String,
-        val instructorId: String,
-        val studentId: String,
-        val sessionId: String,
+        val student: Student.Response,
+        val session: StudentSession.Response,
         val startAt: LocalDateTime,
         val endAt: LocalDateTime,
     ) {
         companion object {
-            fun fromDbRow(row: StudentMeeting): Page = Page(
-                id = row.id.toString(),
-                instructorId = row.instructorId.toString(),
-                studentId = row.studentId.toString(),
-                sessionId = row.sessionId.toString(),
-                startAt = row.startAt,
-                endAt = row.endAt
-            )
+            fun fromDbRow(row: StudentMeeting): Page {
+                val student = Student.findById(row.studentId)!!
+                val session = StudentSession.findById(row.sessionId)!!
+                return Page(
+                    id = row.id.toString(),
+                    student = Student.Response(
+                        id = row.studentId.toString(),
+                        fullName = student.fullName,
+                    ),
+                    session = StudentSession.Response(
+                        id = row.sessionId.toString(),
+                        name = session.name,
+                        status = session.status
+                    ),
+                    startAt = row.startAt,
+                    endAt = row.endAt
+                )
+            }
         }
     }
 
