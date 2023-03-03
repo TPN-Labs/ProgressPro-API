@@ -2,6 +2,7 @@ package com.progressp.service.student
 
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.Student
+import com.progressp.models.student.StudentMeeting
 import com.progressp.models.student.StudentSession
 import com.progressp.models.student.StudentSessionStatus
 import com.progressp.models.student.StudentsSessionsTable
@@ -9,7 +10,6 @@ import com.progressp.models.user.User
 import com.progressp.util.*
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.ArrayList
 import java.util.UUID
@@ -59,17 +59,25 @@ class StudentSessionService(private val databaseFactory: IDatabaseFactory) : ISt
         if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, sessionProps.studentId))
             throw StudentNotYours(tokenUserId, sessionProps.studentId)
 
+        val list = ArrayList<StudentSession.Page>()
+        databaseFactory.dbQuery {
+            StudentSession.find {
+                StudentsSessionsTable.studentId eq Student.findById(UUID.fromString(sessionProps.studentId))!!.id
+            }.forEach {
+                list.add(
+                    StudentSession.Page.fromDbRow(it)
+                )
+            }
+        }
         return databaseFactory.dbQuery {
             val studentSession = StudentSession.new {
                 instructorId = User.findById(UUID.fromString(tokenUserId))!!.id
                 studentId = Student.findById(UUID.fromString(sessionProps.studentId))!!.id
                 status = StudentSessionStatus.STARTED.code
-                name = sessionProps.name
+                unit = list.size + 1
                 meetings = sessionProps.meetings
                 value = sessionProps.value
                 currencyCode = sessionProps.currencyCode
-                startAt = LocalDate.parse(sessionProps.startAt)
-                endAt = LocalDate.parse(sessionProps.endAt)
                 createdAt = LocalDateTime.now()
                 updatedAt = LocalDateTime.now()
             }
@@ -99,12 +107,9 @@ class StudentSessionService(private val databaseFactory: IDatabaseFactory) : ISt
                 instructorId = User.findById(UUID.fromString(tokenUserId))!!.id
                 studentId = Student.findById(UUID.fromString(sessionProps.studentId))!!.id
                 status = sessionProps.status
-                name = sessionProps.name
                 meetings = sessionProps.meetings
                 value = sessionProps.value
                 currencyCode = sessionProps.currencyCode
-                startAt = LocalDate.parse(sessionProps.startAt)
-                endAt = LocalDate.parse(sessionProps.endAt)
                 updatedAt = LocalDateTime.now()
             }
             StudentSession.Response.fromDbRow(studentSession)

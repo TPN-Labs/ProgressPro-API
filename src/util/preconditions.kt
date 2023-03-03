@@ -57,6 +57,10 @@ class Preconditions(private val client: IDatabaseFactory) {
         return height >= 0.0
     }
 
+    fun checkIfStudentAvatarIsValid(id: Int): Boolean {
+        return id in 0..14
+    }
+
     suspend fun checkIfSessionsExists(sessionId: String): Boolean {
         return client.dbQuery {
             val userInDatabase = StudentsSessionsTable.select { (StudentsSessionsTable.id eq UUID.fromString(sessionId)) }.firstOrNull()

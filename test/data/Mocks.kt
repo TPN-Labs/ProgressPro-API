@@ -20,5 +20,5 @@ object MockUUIDs {
 
 object MockData {
     val newUser: User.Register = User.Register(userList[0], "mock@email.com", "mock-username", "mock-pass")
-    val newStudent: Student.New = Student.New(studentList[0], "Mock Name", 1, 1.55, "2022-01-01")
+    val newStudent: Student.New = Student.New(studentList[0], "Mock Name", 1, 1, 1.55, "2022-01-01")
 }

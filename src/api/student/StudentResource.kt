@@ -46,7 +46,7 @@ fun Route.studentsApi(studentService: IStudentService, databaseFactory: IDatabas
                     call.respond(student)
                 }
             }
-            
+
             newRelicTrace(
                 NewRelicTracing("Student", "Delete")
             ) {
@@ -57,7 +57,7 @@ fun Route.studentsApi(studentService: IStudentService, databaseFactory: IDatabas
                     call.respond(student)
                 }
             }
-            
+
         }
     }
 }

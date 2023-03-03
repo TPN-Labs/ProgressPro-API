@@ -17,6 +17,7 @@ object StudentsTable : UUIDTable("students") {
     val instructorId: Column<EntityID<UUID>> = reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
     val fullName: Column<String> = varchar("full_name", 64)
     val gender: Column<Int> = integer("gender")
+    val avatar: Column<Int> = integer("avatar")
     val height: Column<Double> = double("height")
     val knownFrom: Column<LocalDate> = date("known_from").default(LocalDate.now())
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
@@ -29,6 +30,7 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     var instructorId by StudentsTable.instructorId
     var fullName by StudentsTable.fullName
     var gender by StudentsTable.gender
+    var avatar by StudentsTable.avatar
     var height by StudentsTable.height
     var knownFrom by StudentsTable.knownFrom
     var updatedAt by StudentsTable.updatedAt
@@ -37,6 +39,7 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     data class New(
         val id: String?,
         val fullName: String,
+        val avatar: Int,
         val gender: Int,
         val height: Double,
         val knownFrom: String,
@@ -49,6 +52,7 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     data class Page(
         val id: String,
         val fullName: String,
+        val avatar: Int,
         val gender: Int,
         val height: Double,
         val knownFrom: LocalDate,
@@ -57,6 +61,7 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
             fun fromDbRow(row: Student): Page = Page(
                 id = row.id.toString(),
                 fullName = row.fullName,
+                avatar = row.avatar,
                 gender = row.gender,
                 height = row.height,
                 knownFrom = row.knownFrom,

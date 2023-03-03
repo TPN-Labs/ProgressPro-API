@@ -73,7 +73,7 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
                     ),
                     session = StudentSession.Response(
                         id = row.sessionId.toString(),
-                        name = session.name,
+                        unit = session.unit,
                         status = session.status
                     ),
                     startAt = row.startAt,

@@ -23,9 +23,11 @@ class PreferenceNotFound(id: String) :
 class StudentNotFound(id: String) :
     ApiException("Student not found", "Student $id not found", HttpStatusCode.NotFound)
 class StudentGenderNotFound(userId: String, gender: Int) :
-    ApiException("Student is invalid", "User $userId submited invalid gender $gender for student", HttpStatusCode.BadRequest)
+    ApiException("Student is invalid", "User $userId submitted invalid gender $gender for student", HttpStatusCode.BadRequest)
 class StudentHeightIsInvalid(userId: String, height: Double) :
-    ApiException("Student is invalid", "User $userId submited invalid height $height for student", HttpStatusCode.BadRequest)
+    ApiException("Student is invalid", "User $userId submitted invalid height $height for student", HttpStatusCode.BadRequest)
+class StudentAvatarIsInvalid(userId: String, avatarId: Int) :
+    ApiException("Student is invalid", "User $userId submitted invalid avatar id $avatarId for student", HttpStatusCode.BadRequest)
 class StudentMeetingNotFound(id: String) :
     ApiException("Meeting not found", "Meeting $id not found", HttpStatusCode.NotFound)
 class StudentNotYours(userId: String, studentId: String) :

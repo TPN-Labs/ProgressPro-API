@@ -27,12 +27,14 @@ fun StatusPagesConfig.statusPages() {
             )
         )
     }
-    exception<Exception> { call, cause ->
+    /*exception<Exception> { call, cause ->
         logger.error("Internal exception/ex:${cause}")
         NewRelic.noticeError(cause)
-        call.respond(HttpStatusCode.InternalServerError, mapOf(
-            "message" to "Internal Server Error",
-            "code" to "500",
-        ))
-    }
+        call.respond(
+            HttpStatusCode.InternalServerError, mapOf(
+                "message" to "Internal Server Error",
+                "code" to "500",
+            )
+        )
+    }*/
 }
