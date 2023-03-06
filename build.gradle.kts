@@ -28,6 +28,40 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     application
+    jacoco
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.7".toBigDecimal()
+            }
+        }
+
+        rule {
+            isEnabled = false
+            element = "CLASS"
+            includes = listOf("org.gradle.*")
+
+            limit {
+                counter = "LINE"
+                value = "TOTALCOUNT"
+                maximum = "0.3".toBigDecimal()
+            }
+        }
+    }
 }
 
 repositories {
