@@ -8,7 +8,6 @@ import com.progressp.models.student.StudentsMeetingsTable
 import com.progressp.models.user.User
 import com.progressp.util.*
 import org.jetbrains.exposed.sql.SortOrder
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.ArrayList
 import java.util.UUID
@@ -71,8 +70,11 @@ class StudentMeetingService(private val databaseFactory: IDatabaseFactory) : ISt
         if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, meetingProps.studentId))
             throw StudentNotYours(tokenUserId, meetingProps.studentId)
 
+        val meeting = databaseFactory.dbQuery {
+            getMeeting(meetingProps.id!!)
+        }
+
         return databaseFactory.dbQuery {
-            val meeting = getMeeting(meetingProps.id!!)
             meeting.apply {
                 instructorId = User.findById(UUID.fromString(tokenUserId))!!.id
                 studentId = Student.findById(UUID.fromString(meetingProps.studentId))!!.id

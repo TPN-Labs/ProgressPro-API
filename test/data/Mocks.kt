@@ -1,12 +1,13 @@
 package com.progressp.data
 
+import com.progressp.data.MockUUIDs.meetingList
 import com.progressp.data.MockUUIDs.sessionList
 import com.progressp.data.MockUUIDs.studentList
 import com.progressp.data.MockUUIDs.userList
 import com.progressp.models.student.Student
+import com.progressp.models.student.StudentMeeting
 import com.progressp.models.student.StudentSession
 import com.progressp.models.user.User
-import java.util.*
 
 object MockUUIDs {
     val userList = listOf(
@@ -24,6 +25,11 @@ object MockUUIDs {
         "11a69f18-e158-494d-8357-e8af1da2e120",
         "9c0ca8ee-bc32-11ed-afa1-0242ac120002"
     )
+
+    val meetingList = listOf(
+        "29d517fd-608b-4904-bfbe-fa32e71a8c2e",
+        "f7382221-aff0-4302-a919-7ada10fe659b"
+    )
 }
 
 object MockData {
@@ -35,5 +41,8 @@ object MockData {
     )
     val newSession: StudentSession.New = StudentSession.New(
         sessionList[0], studentList[0], 1, 200, 12
+    )
+    val newMeeting: StudentMeeting.New = StudentMeeting.New(
+        meetingList[0], studentList[0], sessionList[0], "2022-01-01T10:00:00", "2022-01-01T11:00:00"
     )
 }
