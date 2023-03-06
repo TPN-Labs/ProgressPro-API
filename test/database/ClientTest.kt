@@ -5,5 +5,5 @@ val dbService: DatabaseFactory = DatabaseFactory(
     DB_PORT = "5432",
     DB_NAME = "local_progresspro_tests",
     DB_USER = "postgres",
-    DB_PASS = ""
+    DB_PASS = "postgres_test"
 )
