@@ -13,7 +13,7 @@ object LibrariesVersion {
     const val jwt = "0.11.5"
     const val koin = "3.2.2"
     const val kotlinTest = "1.7.20"
-    const val ktor = "2.2.1"
+    const val ktor = "2.2.3"
     const val logback = "1.4.4"
     const val newRelic = "7.11.0"
     const val okHttp3 = "4.10.0"

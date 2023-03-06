@@ -7,7 +7,12 @@ import com.progressp.models.student.Student
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.UsersTable
 import com.progressp.service.user.UserService
-import com.progressp.util.*
+import com.progressp.util.StudentAvatarIsInvalid
+import com.progressp.util.StudentGenderNotFound
+import com.progressp.util.StudentHeightIsInvalid
+import com.progressp.util.StudentNotFound
+import com.progressp.util.StudentNotYours
+import com.progressp.util.progressJWT
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.deleteAll
 import org.junit.jupiter.api.BeforeEach
@@ -59,6 +64,16 @@ class StudentServiceTest {
     }
 
     @Test
+    fun `user does not create a student if avatar is invalid`() {
+        runBlocking {
+            assertFailsWith(StudentAvatarIsInvalid::class) {
+                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
+                studentService.userCreate(userToken, MockData.newStudent.copy(avatar = -1))
+            }
+        }
+    }
+
+    @Test
     fun `user creates a student`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
@@ -102,6 +117,16 @@ class StudentServiceTest {
     }
 
     @Test
+    fun `user does not update a student if avatar is invalid`() {
+        runBlocking {
+            assertFailsWith(StudentAvatarIsInvalid::class) {
+                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
+                studentService.userUpdate(userToken, MockData.newStudent.copy(avatar = -1))
+            }
+        }
+    }
+
+    @Test
     fun `user does not update a student if the user did not create it`() {
         runBlocking {
             assertFailsWith(StudentNotYours::class) {
@@ -123,6 +148,7 @@ class StudentServiceTest {
                     id = createdStudent.id,
                     fullName = "OtherName",
                     gender = 1,
+                    avatar = 2,
                     height = 2.0,
                     knownFrom = "2022-01-01"
                 )
@@ -143,7 +169,7 @@ class StudentServiceTest {
     }
 
     @Test
-    fun `user deletes a home`() {
+    fun `user deletes a student`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
             val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")

@@ -2,7 +2,8 @@ package com.progressp.api.student
 
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.Student
-import com.progressp.service.student.IStudentService
+import com.progressp.models.student.StudentSession
+import com.progressp.service.student.IStudentSessionService
 import com.progressp.util.NewRelicTracing
 import com.progressp.util.newRelicTrace
 import com.progressp.util.userValidated
@@ -11,53 +12,41 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.studentsApi(studentService: IStudentService, databaseFactory: IDatabaseFactory) {
+fun Route.studentsSessionsApi(studentSessionService: IStudentSessionService, databaseFactory: IDatabaseFactory) {
 
     userValidated(databaseFactory) {
-        route("/students") {
+        route("/students_sessions") {
             newRelicTrace(
-                NewRelicTracing("Student", "All")
+                NewRelicTracing("StudentSession", "All")
             ) {
                 get("/my") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
-                    val preferences = studentService.userAll(token)
+                    val preferences = studentSessionService.userAll(token)
                     call.respond(preferences)
                 }
             }
 
             newRelicTrace(
-                NewRelicTracing("Student", "Create")
+                NewRelicTracing("StudentSession", "Create")
             ) {
                 post("/my") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
-                    val bodyStudent = call.receive<Student.New>()
-                    val student = studentService.userCreate(token, bodyStudent)
+                    val bodySession = call.receive<StudentSession.New>()
+                    val student = studentSessionService.userCreate(token, bodySession)
                     call.respond(student)
                 }
             }
 
             newRelicTrace(
-                NewRelicTracing("Student", "Update")
+                NewRelicTracing("StudentSession", "Update")
             ) {
                 put("/my") {
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
-                    val bodyStudent = call.receive<Student.New>()
-                    val student = studentService.userUpdate(token, bodyStudent)
+                    val bodySession = call.receive<StudentSession.New>()
+                    val student = studentSessionService.userUpdate(token, bodySession)
                     call.respond(student)
                 }
             }
-
-            newRelicTrace(
-                NewRelicTracing("Student", "Delete")
-            ) {
-                delete("/my") {
-                    val token = call.request.authorization()?.removePrefix("Bearer ")!!
-                    val bodyStudent = call.receive<Student.Delete>()
-                    val student = studentService.userDelete(token, bodyStudent)
-                    call.respond(student)
-                }
-            }
-
         }
     }
 }

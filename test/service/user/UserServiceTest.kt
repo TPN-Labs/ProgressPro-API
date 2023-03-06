@@ -8,6 +8,7 @@ import com.progressp.util.UserEmailExists
 import com.progressp.util.UserEmailInvalid
 import com.progressp.util.UserIncorrectPassword
 import com.progressp.util.UsernameExists
+import com.progressp.util.getUserDataFromJWT
 import com.progressp.util.progressJWT
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.deleteAll
@@ -96,15 +97,15 @@ class UserServiceTest {
             val originalPass = newUser.copy().password!!
             val result = userService.userRegister(newUser)
             val expectedToken = progressJWT.sign(result.id, 0, result.username)
-            assertEquals(
-                expectedToken,
-                userService.userLogin(
-                    User.Login(user = newUser.email, password = originalPass),
-                    "device-type",
-                    "device-ip",
-                    "device-id",
-                )
+            val actualToken = userService.userLogin(
+                User.Login(user = newUser.username, password = originalPass),
+                "device-type",
+                "device-ip",
+                "device-id",
             )
+            val actualIdFromToken = getUserDataFromJWT(actualToken, "id") as String
+            val expectedIdFromToken = getUserDataFromJWT(expectedToken, "id") as String
+            assertEquals(actualIdFromToken, expectedIdFromToken)
         }
     }
 

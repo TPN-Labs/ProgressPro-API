@@ -41,6 +41,8 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
 
         if (!Preconditions(databaseFactory).checkIfStudentGenderExists(studentProps.gender))
             throw StudentGenderNotFound(tokenUserId, studentProps.gender)
+        if (!Preconditions(databaseFactory).checkIfStudentAvatarIsValid(studentProps.avatar))
+            throw StudentAvatarIsInvalid(tokenUserId, studentProps.avatar)
         if (!Preconditions(databaseFactory).checkIfStudentHeightIsValid(studentProps.height))
             throw StudentHeightIsInvalid(tokenUserId, studentProps.height)
 
@@ -50,6 +52,7 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
                 fullName = studentProps.fullName
                 gender = studentProps.gender
                 height = studentProps.height
+                avatar = studentProps.avatar
                 knownFrom = LocalDate.parse(studentProps.knownFrom)
                 createdAt = LocalDateTime.now()
                 updatedAt = LocalDateTime.now()
@@ -65,6 +68,8 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
             throw StudentGenderNotFound(tokenUserId, studentProps.gender)
         if (!Preconditions(databaseFactory).checkIfStudentHeightIsValid(studentProps.height))
             throw StudentHeightIsInvalid(tokenUserId, studentProps.height)
+        if (!Preconditions(databaseFactory).checkIfStudentAvatarIsValid(studentProps.avatar))
+            throw StudentAvatarIsInvalid(tokenUserId, studentProps.avatar)
         if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, studentProps.id!!))
             throw StudentNotYours(tokenUserId, studentProps.id)
 
@@ -74,6 +79,7 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
                 fullName = studentProps.fullName
                 gender = studentProps.gender
                 height = studentProps.height
+                avatar = studentProps.avatar
                 knownFrom = LocalDate.parse(studentProps.knownFrom)
                 updatedAt = LocalDateTime.now()
             }
@@ -94,7 +100,8 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
             student!!.delete()
             Student.Response(
                 id = student.id.toString(),
-                fullName = student.fullName
+                fullName = student.fullName,
+                avatar = student.avatar,
             )
         }
     }
