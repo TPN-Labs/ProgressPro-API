@@ -100,7 +100,8 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
             student!!.delete()
             Student.Response(
                 id = student.id.toString(),
-                fullName = student.fullName
+                fullName = student.fullName,
+                avatar = student.avatar,
             )
         }
     }

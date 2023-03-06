@@ -6,6 +6,9 @@
 
 ⏰ This app is perfect for busy fitness instructors who want to stay organized and on top of their clients' progress without spending hours on paperwork and manual tracking.
 
+### [📱 ProgressPro Mobile (Flutter)](https://github.com/hopingsteam/ProgressPro-Mobile)
+### [🌎 ProgressPro Web (React)](https://github.com/hopingsteam/ProgressPro-Web)
+
 # 🚀 ProgressPro API (Ktor)
 
 ProgressPro (also known as ProgressP) is a lightweight app that empowers fitness instructors to change lives.

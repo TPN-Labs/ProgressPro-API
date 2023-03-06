@@ -31,16 +31,16 @@ class StudentSessionService(private val databaseFactory: IDatabaseFactory) : ISt
         return databaseFactory.dbQuery {
             StudentSession.find {
                 (StudentsSessionsTable.instructorId eq User.findById(UUID.fromString(userId))!!.id) and
-                (StudentsSessionsTable.status inList listOf(
-                    StudentSessionStatus.STARTED.code,
-                    StudentSessionStatus.PAID.code,
-                    StudentSessionStatus.CLOSED.code)
-                )
+                        (StudentsSessionsTable.status inList listOf(
+                            StudentSessionStatus.STARTED.code,
+                            StudentSessionStatus.PAID.code,
+                        )
+                                )
             }.orderBy(StudentsSessionsTable.createdAt to SortOrder.DESC).forEach {
-                    list.add(
-                        StudentSession.Page.fromDbRow(it)
-                    )
-                }
+                list.add(
+                    StudentSession.Page.fromDbRow(it)
+                )
+            }
             list
         }
     }
@@ -48,10 +48,8 @@ class StudentSessionService(private val databaseFactory: IDatabaseFactory) : ISt
     override suspend fun userCreate(token: String, sessionProps: StudentSession.New): StudentSession.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 
-        if (!Preconditions(databaseFactory).checkIfCurrencyExists(sessionProps.currencyCode))
-            throw CurrencyCodeNotFound(sessionProps.currencyCode)
-        if (!Preconditions(databaseFactory).checkIfValueIsValid(sessionProps.value))
-            throw StudentSessionTotalInvalid(sessionProps.value)
+        if (!Preconditions(databaseFactory).checkIfValueIsValid(sessionProps.price))
+            throw StudentSessionTotalInvalid(sessionProps.price)
         if (!Preconditions(databaseFactory).checkIfValueIsValid(sessionProps.meetings))
             throw StudentSessionTotalInvalid(sessionProps.meetings)
         if (!Preconditions(databaseFactory).checkIfStudentExists(sessionProps.studentId))
@@ -76,8 +74,7 @@ class StudentSessionService(private val databaseFactory: IDatabaseFactory) : ISt
                 status = StudentSessionStatus.STARTED.code
                 unit = list.size + 1
                 meetings = sessionProps.meetings
-                value = sessionProps.value
-                currencyCode = sessionProps.currencyCode
+                price = sessionProps.price
                 createdAt = LocalDateTime.now()
                 updatedAt = LocalDateTime.now()
             }
@@ -88,28 +85,26 @@ class StudentSessionService(private val databaseFactory: IDatabaseFactory) : ISt
     override suspend fun userUpdate(token: String, sessionProps: StudentSession.New): StudentSession.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 
-        if (!Preconditions(databaseFactory).checkIfCurrencyExists(sessionProps.currencyCode))
-            throw CurrencyCodeNotFound(sessionProps.currencyCode)
-        if (!Preconditions(databaseFactory).checkIfValueIsValid(sessionProps.value))
-            throw StudentSessionTotalInvalid(sessionProps.value)
+        if (!Preconditions(databaseFactory).checkIfValueIsValid(sessionProps.price))
+            throw StudentSessionTotalInvalid(sessionProps.price)
         if (!Preconditions(databaseFactory).checkIfValueIsValid(sessionProps.meetings))
             throw StudentSessionTotalInvalid(sessionProps.meetings)
         if (!Preconditions(databaseFactory).checkIfSessionStatusExists(sessionProps.status))
             throw StudentSessionStatusInvalid(tokenUserId, sessionProps.status)
         if (!Preconditions(databaseFactory).checkIfStudentExists(sessionProps.studentId))
             throw StudentNotFound(sessionProps.studentId)
+
+        val studentSession = databaseFactory.dbQuery { getStudentSession(sessionProps.id!!) }
         if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudentSession(tokenUserId, sessionProps.id!!))
             throw StudentNotYours(tokenUserId, sessionProps.id)
 
         return databaseFactory.dbQuery {
-            val studentSession = getStudentSession(sessionProps.id)
             studentSession.apply {
                 instructorId = User.findById(UUID.fromString(tokenUserId))!!.id
                 studentId = Student.findById(UUID.fromString(sessionProps.studentId))!!.id
                 status = sessionProps.status
                 meetings = sessionProps.meetings
-                value = sessionProps.value
-                currencyCode = sessionProps.currencyCode
+                price = sessionProps.price
                 updatedAt = LocalDateTime.now()
             }
             StudentSession.Response.fromDbRow(studentSession)

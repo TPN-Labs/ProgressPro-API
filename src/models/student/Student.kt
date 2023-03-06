@@ -72,11 +72,13 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     data class Response(
         val id: String,
         val fullName: String,
+        val avatar: Int,
     ) {
         companion object {
             fun fromRow(row: Student): Response = Response(
                 id = row.id.toString(),
                 fullName = row.fullName,
+                avatar = row.avatar,
             )
         }
     }

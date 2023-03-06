@@ -17,8 +17,7 @@ object StudentsSessionsTable : UUIDTable("students_sessions") {
     val status: Column<Int> = integer("status")
     val unit: Column<Int> = integer("unit")
     val meetings: Column<Int> = integer("meetings")
-    val value: Column<Int> = integer("value")
-    val currencyCode: Column<String> = varchar("currency_code", 8).default("USD")
+    val price: Column<Int> = integer("price")
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
 }
@@ -31,8 +30,7 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
     var status by StudentsSessionsTable.status
     var unit by StudentsSessionsTable.unit
     var meetings by StudentsSessionsTable.meetings
-    var value by StudentsSessionsTable.value
-    var currencyCode by StudentsSessionsTable.currencyCode
+    var price by StudentsSessionsTable.price
     var updatedAt by StudentsSessionsTable.updatedAt
     var createdAt by StudentsSessionsTable.createdAt
 
@@ -40,9 +38,8 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
         val id: String?,
         val studentId: String,
         val status: Int,
-        val value: Int,
+        val price: Int,
         val meetings: Int,
-        val currencyCode: String,
     )
 
     data class Response(
@@ -64,9 +61,8 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
         val student: Student.Response,
         val status: Int,
         val unit: Int,
-        val value: Int,
+        val price: Int,
         val meetings: Int,
-        val currencyCode: String,
     ) {
         companion object {
             fun fromDbRow(row: StudentSession): Page {
@@ -76,12 +72,12 @@ class StudentSession(id: EntityID<UUID>) : UUIDEntity(id) {
                     student = Student.Response(
                         id = row.studentId.toString(),
                         fullName = student.fullName,
+                        avatar = student.avatar,
                     ),
                     status = row.status,
                     unit = row.unit,
-                    value = row.value,
+                    price = row.price,
                     meetings = row.meetings,
-                    currencyCode = row.currencyCode,
                 )
             }
         }
@@ -92,5 +88,4 @@ enum class StudentSessionStatus(val code: Int) {
     STARTED(1),
     PAID(2),
     CLOSED(3),
-    ARCHIVED(4),
 }

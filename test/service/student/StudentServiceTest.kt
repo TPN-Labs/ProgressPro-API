@@ -169,7 +169,7 @@ class StudentServiceTest {
     }
 
     @Test
-    fun `user deletes a home`() {
+    fun `user deletes a student`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
             val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")

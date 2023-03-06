@@ -70,6 +70,7 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
                     student = Student.Response(
                         id = row.studentId.toString(),
                         fullName = student.fullName,
+                        avatar = student.avatar,
                     ),
                     session = StudentSession.Response(
                         id = row.sessionId.toString(),
