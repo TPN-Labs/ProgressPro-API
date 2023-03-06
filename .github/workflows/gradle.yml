@@ -14,15 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres
+        image: postgres:14.4-alpine
         env:
-          POSTGRES_PASSWORD: postgres_test
           POSTGRES_DB: local_progresspro_tests
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
