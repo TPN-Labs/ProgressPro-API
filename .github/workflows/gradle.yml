@@ -17,6 +17,7 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres_test
+          POSTGRES_DB: local_progresspro_tests
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
