@@ -60,9 +60,9 @@ jobs:
           echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
           echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
       - name: Commit the badge (if it changed)
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.ref_name }}
         run: |
           if [[ `git status --porcelain` ]]; then
             git config --global user.name 'Jacoco coverage'
