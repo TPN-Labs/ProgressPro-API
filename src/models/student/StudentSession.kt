@@ -12,8 +12,12 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 object StudentsSessionsTable : UUIDTable("students_sessions") {
-    val studentId: Column<EntityID<UUID>> = reference("student_id", StudentsTable, onDelete = ReferenceOption.CASCADE)
-    val instructorId: Column<EntityID<UUID>> = reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
+    val studentId: Column<EntityID<UUID>> = reference(
+        "student_id", StudentsTable, onDelete = ReferenceOption.CASCADE
+    )
+    val instructorId: Column<EntityID<UUID>> = reference(
+        "instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE
+    )
     val status: Column<Int> = integer("status")
     val unit: Column<Int> = integer("unit")
     val meetings: Column<Int> = integer("meetings")

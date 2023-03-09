@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.gitlab.arturbosch.detekt.Detekt
 
 object LibrariesVersion {
     const val assertj = "3.23.1"
@@ -27,42 +28,28 @@ plugins {
     kotlin("plugin.serialization") version "1.7.20"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("io.gitlab.arturbosch.detekt") version "1.22.0"
     application
     jacoco
 }
 
-tasks.test {
-    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    config = files("$projectDir/resources/detekt.yml")
+    baseline = file("$projectDir/resources/baseline.xml")
 }
-tasks.jacocoTestReport {
-    dependsOn(tasks.test) // tests are required to run before generating the report
+
+tasks.withType<Detekt>().configureEach {
     reports {
+        html.required.set(true)
         xml.required.set(true)
-        csv.required.set(true)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+        txt.required.set(true)
+        sarif.required.set(true)
+        md.required.set(true)
     }
 }
-tasks.jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = "0.7".toBigDecimal()
-            }
-        }
 
-        rule {
-            isEnabled = false
-            element = "CLASS"
-            includes = listOf("org.gradle.*")
-
-            limit {
-                counter = "LINE"
-                value = "TOTALCOUNT"
-                maximum = "0.3".toBigDecimal()
-            }
-        }
-    }
-}
 
 repositories {
     mavenCentral()
@@ -128,4 +115,38 @@ tasks.withType<Test> {
 
 tasks.withType<ShadowJar>() {
 
+}
+
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // tests are required to run before generating the report
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.7".toBigDecimal()
+            }
+        }
+
+        rule {
+            isEnabled = false
+            element = "CLASS"
+            includes = listOf("org.gradle.*")
+
+            limit {
+                counter = "LINE"
+                value = "TOTALCOUNT"
+                maximum = "0.3".toBigDecimal()
+            }
+        }
+    }
 }

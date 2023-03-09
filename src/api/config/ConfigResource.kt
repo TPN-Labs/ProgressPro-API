@@ -1,30 +1,23 @@
 package com.progressp.api.config
 
-import com.progressp.config.Currencies
+import com.progressp.config.Measurements
 import com.progressp.util.NewRelicTracing
 import com.progressp.util.newRelicTrace
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.application.call
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.route
+import io.ktor.server.routing.get
 
 fun Route.configApi() {
     route("/config") {
-        route("/currencies") {
+        route("/measurements") {
             newRelicTrace(
                 NewRelicTracing("Currency", "All")
             ) {
                 get("/all") {
-                    val currencies = Currencies.getAlphabeticalCurrencies()
-                    call.respond(currencies)
-                }
-            }
-
-            newRelicTrace(
-                NewRelicTracing("Currency", "GetCurrencyByCode")
-            ) {
-                get("/code/{code}") {
-                    val currency = Currencies.getCurrencyByCode(call.parameters["code"]!!)
-                    call.respond(currency)
+                    val measurements = Measurements.getAll()
+                    call.respond(measurements)
                 }
             }
         }

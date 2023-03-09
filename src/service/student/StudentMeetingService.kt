@@ -6,7 +6,12 @@ import com.progressp.models.student.StudentMeeting
 import com.progressp.models.student.StudentSession
 import com.progressp.models.student.StudentsMeetingsTable
 import com.progressp.models.user.User
-import com.progressp.util.*
+import com.progressp.util.Preconditions
+import com.progressp.util.StudentMeetingNotFound
+import com.progressp.util.StudentNotFound
+import com.progressp.util.StudentNotYours
+import com.progressp.util.StudentSessionNotFound
+import com.progressp.util.getUserDataFromJWT
 import org.jetbrains.exposed.sql.SortOrder
 import java.time.LocalDateTime
 import java.util.ArrayList
@@ -20,7 +25,8 @@ interface IStudentMeetingService {
 
 class StudentMeetingService(private val databaseFactory: IDatabaseFactory) : IStudentMeetingService {
 
-    private fun getMeeting(id: String) = StudentMeeting.findById(UUID.fromString(id)) ?: throw StudentMeetingNotFound(id)
+    private fun getMeeting(id: String) =
+        StudentMeeting.findById(UUID.fromString(id)) ?: throw StudentMeetingNotFound(id)
 
     override suspend fun userAll(token: String): ArrayList<StudentMeeting.Page> {
         val userId = getUserDataFromJWT(token, "id") as String
@@ -35,7 +41,7 @@ class StudentMeetingService(private val databaseFactory: IDatabaseFactory) : ISt
             list
         }
     }
-    
+
     override suspend fun userCreate(token: String, meetingProps: StudentMeeting.New): StudentMeeting.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 

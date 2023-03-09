@@ -1,6 +1,7 @@
 package com.progressp.service.user
 
 import com.progressp.config.APIConstants
+import com.progressp.config.APIConstants.BCRYPT_ROUNDS
 import com.progressp.database.IDatabaseFactory
 import com.progressp.database.PaginatedResult
 import com.progressp.models.log.AuthLog
@@ -20,8 +21,13 @@ import com.progressp.util.UserNotFound
 import com.progressp.util.UsernameExists
 import com.progressp.util.getUserDataFromJWT
 import com.progressp.util.progressJWT
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.or
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 import org.mindrot.jbcrypt.BCrypt
 import java.time.LocalDateTime
 import java.util.*
@@ -62,7 +68,8 @@ class UserService(private val databaseFactory: IDatabaseFactory) : IUserService 
     override suspend fun userRegister(newUser: User.Register): User.Response {
         if (!Preconditions(databaseFactory).checkIfEmailIsValid(newUser.email)) throw UserEmailInvalid(newUser.email)
         if (Preconditions(databaseFactory).checkIfEmailExists(newUser.email)) throw UserEmailExists(newUser.email)
-        if (Preconditions(databaseFactory).checkIfUsernameExists(newUser.username)) throw UsernameExists(newUser.username)
+        if (Preconditions(databaseFactory).checkIfUsernameExists(newUser.username))
+            throw UsernameExists(newUser.username)
 
         val totalUsers = databaseFactory.dbQuery { User.all().count() }
         _newRelicService.recordMetric(MetricNames.USERS_REGISTERED, totalUsers.toFloat())
@@ -70,7 +77,7 @@ class UserService(private val databaseFactory: IDatabaseFactory) : IUserService 
         return databaseFactory.dbQuery {
             val userRow = UsersTable.insert {
                 it[email] = newUser.email
-                it[password] = BCrypt.hashpw(newUser.password, BCrypt.gensalt(10))
+                it[password] = BCrypt.hashpw(newUser.password, BCrypt.gensalt(BCRYPT_ROUNDS))
                 it[username] = newUser.username.lowercase()
                 it[role] = 0
                 it[premium] = 0

@@ -1,14 +1,16 @@
 package com.progressp.util
 
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode
 
-abstract class ApiException(val clientMessage: String, logMessage: String, val statusCode: HttpStatusCode) :
+open class ApiException(val clientMessage: String, logMessage: String, val statusCode: HttpStatusCode) :
     Exception(logMessage)
 
 class JwtSignatureFails(cause: String) :
     ApiException("Authentication has failed", cause, HttpStatusCode.BadRequest)
-class CurrencyCodeNotFound(code: String) :
-    ApiException("Currency code not found", "Currency code: $code not found", HttpStatusCode.NotFound)
+
+class MeasurementCodeNotFound(code: String) :
+    ApiException("Measurement code not found", "Measurement code: $code not found", HttpStatusCode.NotFound)
+
 class InternalServerError(message: String) :
     ApiException("Internal server error", message, HttpStatusCode.InternalServerError)
 
@@ -20,24 +22,50 @@ class PreferenceDoesNotExist(name: String, userId: String) :
 
 class PreferenceNotFound(id: String) :
     ApiException("Preference not found", "Preference $id not found", HttpStatusCode.NotFound)
+
 class StudentNotFound(id: String) :
     ApiException("Student not found", "Student $id not found", HttpStatusCode.NotFound)
+
 class StudentGenderNotFound(userId: String, gender: Int) :
-    ApiException("Student is invalid", "User $userId submitted invalid gender $gender for student", HttpStatusCode.BadRequest)
+    ApiException(
+        "Student is invalid",
+        "User $userId submitted invalid gender $gender for student",
+        HttpStatusCode.BadRequest,
+    )
+
 class StudentHeightIsInvalid(userId: String, height: Double) :
-    ApiException("Student is invalid", "User $userId submitted invalid height $height for student", HttpStatusCode.BadRequest)
+    ApiException(
+        "Student is invalid",
+        "User $userId submitted invalid height $height for student",
+        HttpStatusCode.BadRequest,
+    )
+
 class StudentAvatarIsInvalid(userId: String, avatarId: Int) :
-    ApiException("Student is invalid", "User $userId submitted invalid avatar id $avatarId for student", HttpStatusCode.BadRequest)
+    ApiException(
+        "Student is invalid",
+        "User $userId submitted invalid avatar id $avatarId for student",
+        HttpStatusCode.BadRequest,
+    )
+
 class StudentMeetingNotFound(id: String) :
     ApiException("Meeting not found", "Meeting $id not found", HttpStatusCode.NotFound)
+
 class StudentNotYours(userId: String, studentId: String) :
     ApiException("Student not found", "User $userId tried to update student $studentId", HttpStatusCode.BadRequest)
+
 class StudentSessionNotFound(id: String) :
     ApiException("Student session not found", "Student session $id not found", HttpStatusCode.NotFound)
+
 class StudentSessionTotalInvalid(value: Int) :
     ApiException("Total value si invalid", "Value: $value is invalid", HttpStatusCode.BadRequest)
+
 class StudentSessionStatusInvalid(userId: String, status: Int) :
-    ApiException("Session status si invalid", "User $userId tried to update a session with status $status", HttpStatusCode.BadRequest)
+    ApiException(
+        "Session status si invalid",
+        "User $userId tried to update a session with status $status",
+        HttpStatusCode.BadRequest
+    )
+
 class UserEmailExists(email: String) :
     ApiException("E-Mail already exists", "Email already exists: $email", HttpStatusCode.BadRequest)
 

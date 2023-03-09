@@ -6,10 +6,16 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.progressp.config.APIConstants
 import java.util.*
 
-private fun dateInFutureMinutes(): Date {
-    val minuteToMillis: Long = 60L * 1000
+private const val TOTAL_DAYS = 60
+private const val SEC_IN_MIN = 60L
+private const val MIN_IN_HOUR = 60
+private const val HOUR_IN_DAY = 24
+private const val MILLIS_IN_SEC = 1000
 
-    val totalMinutes = 60 * 24 * 60 // Two months
+private fun dateInFutureMinutes(): Date {
+    val minuteToMillis: Long = SEC_IN_MIN * MILLIS_IN_SEC
+
+    val totalMinutes = MIN_IN_HOUR * HOUR_IN_DAY * TOTAL_DAYS  // Two months
     val result = Date()
     result.time = result.time + totalMinutes * minuteToMillis
     return result

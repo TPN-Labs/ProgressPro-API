@@ -1,5 +1,7 @@
 package com.progressp.models.log
 
+import com.progressp.config.DbContstants.LARGE_STRING_LENGTH
+import com.progressp.config.DbContstants.STRING_LENGTH
 import com.progressp.models.user.UsersTable
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -13,10 +15,10 @@ import java.util.*
 
 object AuthLogsTable : UUIDTable("log_logins") {
     val userId: Column<EntityID<UUID>> = reference("user_id", UsersTable, onDelete = ReferenceOption.CASCADE)
-    val ip: Column<String> = varchar("ip", 64)
-    val device: Column<String> = varchar("device", 64)
-    val deviceId: Column<String> = varchar("device_id", 256)
-    val method: Column<String> = varchar("method", 64)
+    val ip: Column<String> = varchar("ip", STRING_LENGTH)
+    val device: Column<String> = varchar("device", STRING_LENGTH)
+    val deviceId: Column<String> = varchar("device_id", LARGE_STRING_LENGTH)
+    val method: Column<String> = varchar("method", STRING_LENGTH)
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
 }

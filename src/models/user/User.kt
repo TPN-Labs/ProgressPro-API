@@ -1,5 +1,8 @@
 package com.progressp.models.user
 
+import com.progressp.config.DbContstants.LARGE_STRING_LENGTH
+import com.progressp.config.DbContstants.MEDIUM_STRING_LENGTH
+import com.progressp.config.DbContstants.STRING_LENGTH
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -10,13 +13,13 @@ import java.time.LocalDateTime
 import java.util.*
 
 object UsersTable : UUIDTable("users") {
-    var email: Column<String> = varchar("email", 128).uniqueIndex()
-    var password: Column<String> = varchar("password", 256)
-    val username: Column<String> = varchar("username", 32).uniqueIndex()
+    var email: Column<String> = varchar("email", MEDIUM_STRING_LENGTH).uniqueIndex()
+    var password: Column<String> = varchar("password", LARGE_STRING_LENGTH)
+    val username: Column<String> = varchar("username", STRING_LENGTH).uniqueIndex()
     val role: Column<Int> = integer("role")
     val premium: Column<Int> = integer("premium")
-    val passwordResetToken: Column<String> = varchar("password_reset_token", 128).default("")
-    val emailVerifiedAt: Column<String> = varchar("email_verified_at", 128).default("")
+    val passwordResetToken: Column<String> = varchar("password_reset_token", MEDIUM_STRING_LENGTH).default("")
+    val emailVerifiedAt: Column<String> = varchar("email_verified_at", MEDIUM_STRING_LENGTH).default("")
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
     var updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
 }
