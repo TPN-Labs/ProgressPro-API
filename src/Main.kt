@@ -5,22 +5,24 @@ import com.progressp.api.index
 import com.progressp.config.statusPages
 import com.progressp.config.configureCORS
 import com.progressp.database.IDatabaseFactory
-
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.progressp.config.APIConstants.SENTRY_THRESHOLD
 import com.progressp.util.progressJWT
-import io.ktor.serialization.jackson.*
+import io.ktor.serialization.jackson.jackson
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
 import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.plugins.callloging.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.defaultheaders.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.routing.*
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.plugins.callloging.CallLogging
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.defaultheaders.DefaultHeaders
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.routing.Routing
 import io.sentry.Sentry
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
@@ -63,7 +65,7 @@ fun Application.module() {
     if(System.getenv("SENTRY_DSN") != null) {
         Sentry.init { options ->
             options.dsn = System.getenv("SENTRY_DSN")
-            options.tracesSampleRate = 0.5
+            options.tracesSampleRate = SENTRY_THRESHOLD
         }
     }
 

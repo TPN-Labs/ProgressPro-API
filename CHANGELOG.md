@@ -18,11 +18,13 @@ this file is the go-to source for all the latest information. We hope you find i
 - Instructors can select an avatar (from a collection of 15) for a student
 - Unit tests for implemented changes
 - GitHub Workflow for checking the Pull Requests
+- The code base now uses Detekt for respecting coding format standards
 
 ### 🛠️ Fixed
 
 - This CHANGELOG file to hopefully serve as an evolving example of a standardized open source project CHANGELOG.
 - Student responses
+- Changed the license from MIT to Apache
 
 ### ❌ Removed
 

@@ -1,7 +1,8 @@
 package com.progressp.util
 
-import com.progressp.config.CurrencyCode
+import com.progressp.config.APIConstants
 import com.progressp.config.EMAIL_ADDRESS_PATTERN
+import com.progressp.config.MeasurementCode
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.StudentGender
 import com.progressp.models.student.StudentSessionStatus
@@ -17,8 +18,8 @@ import java.util.UUID
 class Preconditions(private val client: IDatabaseFactory) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun checkIfCurrencyExists(currencyCode: String): Boolean {
-        return CurrencyCode.values().any { it.toString() == currencyCode }
+    fun checkIfMeasurementExists(currencyCode: String): Boolean {
+        return MeasurementCode.values().any { it.toString() == currencyCode }
     }
 
     fun checkIfValueIsValid(value: Int): Boolean {
@@ -58,19 +59,23 @@ class Preconditions(private val client: IDatabaseFactory) {
     }
 
     fun checkIfStudentAvatarIsValid(id: Int): Boolean {
-        return id in 0..14
+        return id in 0..APIConstants.TOTAL_AVATARS
     }
 
     suspend fun checkIfSessionsExists(sessionId: String): Boolean {
         return client.dbQuery {
-            val userInDatabase = StudentsSessionsTable.select { (StudentsSessionsTable.id eq UUID.fromString(sessionId)) }.firstOrNull()
+            val userInDatabase = StudentsSessionsTable.select {
+                (StudentsSessionsTable.id eq UUID.fromString(sessionId))
+            }.firstOrNull()
             userInDatabase != null
         }
     }
 
     suspend fun checkIfStudentExists(studentId: String): Boolean {
         return client.dbQuery {
-            val studentInDatabase = StudentsTable.select { (StudentsTable.id eq UUID.fromString(studentId)) }.firstOrNull()
+            val studentInDatabase = StudentsTable.select {
+                (StudentsTable.id eq UUID.fromString(studentId))
+            }.firstOrNull()
             studentInDatabase != null
         }
     }
@@ -105,5 +110,4 @@ class Preconditions(private val client: IDatabaseFactory) {
             sessionInDb != null
         }
     }
-
 }

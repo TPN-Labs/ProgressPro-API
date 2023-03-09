@@ -1,5 +1,7 @@
 package com.progressp.models.user
 
+import com.progressp.config.DbContstants.LARGE_STRING_LENGTH
+import com.progressp.config.DbContstants.STRING_LENGTH
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -12,8 +14,8 @@ import java.util.UUID
 
 object PreferencesTable : UUIDTable("users_preferences") {
     val userId: Column<EntityID<UUID>> = reference("user_id", UsersTable, onDelete = ReferenceOption.CASCADE)
-    val optionName: Column<String> = varchar("option_name", 64)
-    val optionValue: Column<String> = varchar("option_value", 256)
+    val optionName: Column<String> = varchar("option_name", STRING_LENGTH)
+    val optionValue: Column<String> = varchar("option_value", LARGE_STRING_LENGTH)
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
 }

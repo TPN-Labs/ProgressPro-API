@@ -4,14 +4,19 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.exceptions.SignatureVerificationException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.auth0.jwt.interfaces.DecodedJWT
+import com.progressp.config.APIConstants
 import com.progressp.config.APIConstants.JWT_ALGORITHM
 import com.progressp.config.APIConstants.JWT_ISSUER
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.user.User
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.request.*
-import io.ktor.server.routing.*
+import io.ktor.server.application.install
+import io.ktor.server.application.createRouteScopedPlugin
+import io.ktor.server.auth.AuthenticationChecked
+import io.ktor.server.request.authorization
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.RouteSelector
+import io.ktor.server.routing.RouteSelectorEvaluation
+import io.ktor.server.routing.RoutingResolveContext
 import java.util.*
 
 fun getUserDataFromJWT(token: String, claim: String): Any {
@@ -33,7 +38,7 @@ fun getUserDataFromJWT(token: String, claim: String): Any {
 }
 
 fun isAdmin(token: String): Boolean {
-    return getUserDataFromJWT(token, "role") == 1339
+    return getUserDataFromJWT(token, "role") == APIConstants.ADMIN_ROLE
 }
 
 suspend fun isEmailValidated(token: String, client: IDatabaseFactory): Boolean {

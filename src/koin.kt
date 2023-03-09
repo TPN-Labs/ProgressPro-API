@@ -2,7 +2,12 @@ package com.progressp
 
 import com.progressp.database.DatabaseFactory
 import com.progressp.database.IDatabaseFactory
-import com.progressp.service.student.*
+import com.progressp.service.student.IStudentMeetingService
+import com.progressp.service.student.IStudentService
+import com.progressp.service.student.IStudentSessionService
+import com.progressp.service.student.StudentMeetingService
+import com.progressp.service.student.StudentService
+import com.progressp.service.student.StudentSessionService
 import com.progressp.service.user.IPreferenceService
 import com.progressp.service.user.IUserService
 import com.progressp.service.user.PreferenceService

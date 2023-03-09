@@ -4,7 +4,13 @@ import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.Student
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.User
-import com.progressp.util.*
+import com.progressp.util.Preconditions
+import com.progressp.util.StudentAvatarIsInvalid
+import com.progressp.util.StudentGenderNotFound
+import com.progressp.util.StudentHeightIsInvalid
+import com.progressp.util.StudentNotFound
+import com.progressp.util.StudentNotYours
+import com.progressp.util.getUserDataFromJWT
 import org.jetbrains.exposed.sql.SortOrder
 import java.time.LocalDate
 import java.time.LocalDateTime

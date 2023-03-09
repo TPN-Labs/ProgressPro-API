@@ -2,10 +2,16 @@ package com.progressp.util
 
 import com.newrelic.api.agent.NewRelic
 import com.newrelic.api.agent.Trace
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.request.*
-import io.ktor.server.routing.*
+import io.ktor.server.application.createRouteScopedPlugin
+import io.ktor.server.application.install
+import io.ktor.server.auth.AuthenticationChecked
+import io.ktor.server.request.uri
+import io.ktor.server.request.ApplicationRequest
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.RouteSelector
+import io.ktor.server.routing.RoutingResolveContext
+import io.ktor.server.routing.RouteSelectorEvaluation
+
 
 data class NewRelicTracing(
     val resource: String,

@@ -2,12 +2,17 @@ package com.progressp.service.student
 
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.Student
-import com.progressp.models.student.StudentMeeting
 import com.progressp.models.student.StudentSession
 import com.progressp.models.student.StudentSessionStatus
 import com.progressp.models.student.StudentsSessionsTable
 import com.progressp.models.user.User
-import com.progressp.util.*
+import com.progressp.util.Preconditions
+import com.progressp.util.StudentNotFound
+import com.progressp.util.StudentNotYours
+import com.progressp.util.StudentSessionNotFound
+import com.progressp.util.StudentSessionStatusInvalid
+import com.progressp.util.StudentSessionTotalInvalid
+import com.progressp.util.getUserDataFromJWT
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import java.time.LocalDateTime

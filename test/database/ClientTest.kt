@@ -1,9 +1,9 @@
 package com.progressp.database
 
 val dbService: DatabaseFactory = DatabaseFactory(
-    DB_HOST = "127.0.0.1",
-    DB_PORT = "5432",
-    DB_NAME = "local_progresspro_tests",
-    DB_USER = "postgres",
-    DB_PASS = "postgres_test"
+    dbHost = "127.0.0.1",
+    dbPort = "5432",
+    dbName = "local_progresspro_tests",
+    dbUser = "postgres",
+    dbPass = "postgres_test"
 )

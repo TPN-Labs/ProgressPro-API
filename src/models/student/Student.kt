@@ -1,5 +1,6 @@
 package com.progressp.models.student
 
+import com.progressp.config.DbContstants.STRING_LENGTH
 import com.progressp.models.user.UsersTable
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -14,8 +15,10 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 object StudentsTable : UUIDTable("students") {
-    val instructorId: Column<EntityID<UUID>> = reference("instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE)
-    val fullName: Column<String> = varchar("full_name", 64)
+    val instructorId: Column<EntityID<UUID>> = reference(
+        "instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE
+    )
+    val fullName: Column<String> = varchar("full_name", STRING_LENGTH)
     val gender: Column<Int> = integer("gender")
     val avatar: Column<Int> = integer("avatar")
     val height: Column<Double> = double("height")

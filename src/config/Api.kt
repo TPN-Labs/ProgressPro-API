@@ -12,7 +12,8 @@ import com.progressp.service.student.IStudentService
 import com.progressp.service.student.IStudentSessionService
 import com.progressp.service.user.IPreferenceService
 import com.progressp.service.user.IUserService
-import io.ktor.server.routing.*
+import io.ktor.server.routing.route
+import io.ktor.server.routing.Route
 import org.koin.ktor.ext.inject
 
 fun Route.api() {
