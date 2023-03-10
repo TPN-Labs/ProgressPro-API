@@ -244,9 +244,4 @@ class StudentMeetingServiceTest {
             assertNotNull(updatedMeeting)
         }
     }
-
-    /*
-
-
-     */
 }

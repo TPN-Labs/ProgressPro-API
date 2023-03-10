@@ -18,8 +18,8 @@ import java.util.UUID
 class Preconditions(private val client: IDatabaseFactory) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun checkIfMeasurementExists(currencyCode: String): Boolean {
-        return MeasurementCode.values().any { it.toString() == currencyCode }
+    fun checkIfMeasurementExists(measurementCode: String): Boolean {
+        return MeasurementCode.values().any { it.toString().lowercase() == measurementCode }
     }
 
     fun checkIfValueIsValid(value: Int): Boolean {

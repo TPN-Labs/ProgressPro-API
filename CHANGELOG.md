@@ -19,12 +19,14 @@ this file is the go-to source for all the latest information. We hope you find i
 - Unit tests for implemented changes
 - GitHub Workflow for checking the Pull Requests
 - The code base now uses Detekt for respecting coding format standards
+- Student Notes for taking various measurements (like hip, waist and so on)
 
 ### 🛠️ Fixed
 
 - This CHANGELOG file to hopefully serve as an evolving example of a standardized open source project CHANGELOG.
-- Student responses
+- Updated Ktor from 2.2.3 to 2.2.4
 - Changed the license from MIT to Apache
+- Student responses
 
 ### ❌ Removed
 

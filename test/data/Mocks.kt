@@ -1,11 +1,14 @@
 package com.progressp.data
 
+import com.progressp.config.MeasurementCode
 import com.progressp.data.MockUUIDs.meetingList
+import com.progressp.data.MockUUIDs.noteList
 import com.progressp.data.MockUUIDs.sessionList
 import com.progressp.data.MockUUIDs.studentList
 import com.progressp.data.MockUUIDs.userList
 import com.progressp.models.student.Student
 import com.progressp.models.student.StudentMeeting
+import com.progressp.models.student.StudentNote
 import com.progressp.models.student.StudentSession
 import com.progressp.models.user.User
 
@@ -30,6 +33,11 @@ object MockUUIDs {
         "29d517fd-608b-4904-bfbe-fa32e71a8c2e",
         "f7382221-aff0-4302-a919-7ada10fe659b"
     )
+
+    val noteList = listOf(
+        "c695cbd2-35ee-4f60-96b6-bbb6197fe6ee",
+        "25cdd6f8-4db3-4aef-8c17-8e95c437938c"
+    )
 }
 
 object MockData {
@@ -44,5 +52,8 @@ object MockData {
     )
     val newMeeting: StudentMeeting.New = StudentMeeting.New(
         meetingList[0], studentList[0], sessionList[0], "2022-01-01T10:00:00", "2022-01-01T11:00:00"
+    )
+    val newNote: StudentNote.New = StudentNote.New(
+        noteList[0], studentList[0], MeasurementCode.ARM.toString().lowercase(), 12.0, "2022-01-01"
     )
 }
