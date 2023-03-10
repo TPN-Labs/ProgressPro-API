@@ -50,6 +50,9 @@ class StudentAvatarIsInvalid(userId: String, avatarId: Int) :
 class StudentMeetingNotFound(id: String) :
     ApiException("Meeting not found", "Meeting $id not found", HttpStatusCode.NotFound)
 
+class StudentNoteNotFound(id: String) :
+    ApiException("Note not found", "Note $id not found", HttpStatusCode.NotFound)
+
 class StudentNotYours(userId: String, studentId: String) :
     ApiException("Student not found", "User $userId tried to update student $studentId", HttpStatusCode.BadRequest)
 

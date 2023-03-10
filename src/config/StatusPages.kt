@@ -2,6 +2,7 @@ package com.progressp.config
 
 import com.newrelic.api.agent.NewRelic
 import com.progressp.util.ApiException
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.statuspages.StatusPagesConfig
 import io.ktor.server.response.respond
 import org.slf4j.LoggerFactory
@@ -26,7 +27,7 @@ fun StatusPagesConfig.statusPages() {
             )
         )
     }
-    /*exception<Exception> { call, cause ->
+    exception<Exception> { call, cause ->
         logger.error("Internal exception/ex:${cause}")
         NewRelic.noticeError(cause)
         call.respond(
@@ -35,5 +36,5 @@ fun StatusPagesConfig.statusPages() {
                 "code" to "500",
             )
         )
-    }*/
+    }
 }

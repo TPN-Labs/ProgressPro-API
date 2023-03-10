@@ -14,7 +14,7 @@ object LibrariesVersion {
     const val jwt = "0.11.5"
     const val koin = "3.2.2"
     const val kotlinTest = "1.7.20"
-    const val ktor = "2.2.3"
+    const val ktor = "2.2.4"
     const val logback = "1.4.4"
     const val newRelic = "7.11.0"
     const val okHttp3 = "4.10.0"
@@ -34,8 +34,8 @@ plugins {
 }
 
 detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
+    buildUponDefaultConfig = true
+    allRules = false
     config = files("$projectDir/resources/detekt.yml")
     baseline = file("$projectDir/resources/baseline.xml")
 }
