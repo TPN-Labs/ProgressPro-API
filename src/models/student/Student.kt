@@ -9,8 +9,6 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.javatime.datetime
-import org.jetbrains.exposed.sql.javatime.date
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -22,7 +20,6 @@ object StudentsTable : UUIDTable("students") {
     val gender: Column<Int> = integer("gender")
     val avatar: Column<Int> = integer("avatar")
     val height: Column<Double> = double("height")
-    val knownFrom: Column<LocalDate> = date("known_from").default(LocalDate.now())
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
 }
@@ -35,7 +32,6 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     var gender by StudentsTable.gender
     var avatar by StudentsTable.avatar
     var height by StudentsTable.height
-    var knownFrom by StudentsTable.knownFrom
     var updatedAt by StudentsTable.updatedAt
     var createdAt by StudentsTable.createdAt
 
@@ -45,7 +41,6 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
         val avatar: Int,
         val gender: Int,
         val height: Double,
-        val knownFrom: String,
     )
 
     data class Delete(
@@ -58,7 +53,6 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
         val avatar: Int,
         val gender: Int,
         val height: Double,
-        val knownFrom: LocalDate,
     ) {
         companion object {
             fun fromDbRow(row: Student): Page = Page(
@@ -67,7 +61,6 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
                 avatar = row.avatar,
                 gender = row.gender,
                 height = row.height,
-                knownFrom = row.knownFrom,
             )
         }
     }

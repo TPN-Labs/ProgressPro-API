@@ -10,7 +10,6 @@ import com.progressp.service.user.UserService
 import com.progressp.util.StudentMeetingNotFound
 import com.progressp.util.StudentNotFound
 import com.progressp.util.StudentNotYours
-import com.progressp.util.StudentSessionNotFound
 import com.progressp.util.progressJWT
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.deleteAll
@@ -26,7 +25,6 @@ import kotlin.test.assertNotNull
 class StudentMeetingServiceTest {
 
     private lateinit var studentService: StudentService
-    private lateinit var sessionService: StudentSessionService
     private lateinit var meetingService: StudentMeetingService
     private lateinit var userService: UserService
 
@@ -34,7 +32,6 @@ class StudentMeetingServiceTest {
     fun setup() {
         dbService.init()
         studentService = StudentService(dbService)
-        sessionService = StudentSessionService(dbService)
         meetingService = StudentMeetingService(dbService)
         userService = UserService(dbService)
         runBlocking {
@@ -47,30 +44,14 @@ class StudentMeetingServiceTest {
     }
 
     @Test
-    fun `user does not create a meeting if session does not exist`() {
-        runBlocking {
-            assertFailsWith(StudentSessionNotFound::class) {
-                val userToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token")
-                meetingService.userCreate(userToken, MockData.newMeeting)
-            }
-        }
-    }
-
-    @Test
     fun `user does not create a meeting if student does not exist`() {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
                 val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
-                val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-                val sessionBean = sessionService.userCreate(
-                    userToken, MockData.newSession.copy(studentId = studentBean.id)
-                )
 
                 meetingService.userCreate(
-                    userToken, MockData.newMeeting.copy(
-                        sessionId = sessionBean.id
-                    )
+                    userToken, MockData.newMeeting
                 )
             }
         }
@@ -83,14 +64,10 @@ class StudentMeetingServiceTest {
                 val userBean = userService.userRegister(MockData.newUser)
                 val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-                val sessionBean = sessionService.userCreate(
-                    userToken, MockData.newSession.copy(studentId = studentBean.id)
-                )
 
                 val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token-2")
                 meetingService.userCreate(
                     otherToken, MockData.newMeeting.copy(
-                        sessionId = sessionBean.id,
                         studentId = studentBean.id
                     )
                 )
@@ -104,12 +81,8 @@ class StudentMeetingServiceTest {
             val userBean = userService.userRegister(MockData.newUser)
             val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-            val sessionBean = sessionService.userCreate(
-                userToken, MockData.newSession.copy(studentId = studentBean.id)
-            )
             val result = meetingService.userCreate(
                 userToken, MockData.newMeeting.copy(
-                    sessionId = sessionBean.id,
                     studentId = studentBean.id
                 )
             )
@@ -123,18 +96,14 @@ class StudentMeetingServiceTest {
             val userBean = userService.userRegister(MockData.newUser)
             val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-            val sessionBean = sessionService.userCreate(
-                userToken, MockData.newSession.copy(studentId = studentBean.id)
-            )
+
             meetingService.userCreate(
                 userToken, MockData.newMeeting.copy(
-                    sessionId = sessionBean.id,
                     studentId = studentBean.id
                 )
             )
             meetingService.userCreate(
                 userToken, MockData.newMeeting.copy(
-                    sessionId = sessionBean.id,
                     studentId = studentBean.id
                 )
             )
@@ -145,30 +114,14 @@ class StudentMeetingServiceTest {
     }
 
     @Test
-    fun `user does not update a meeting if session does not exist`() {
-        runBlocking {
-            assertFailsWith(StudentSessionNotFound::class) {
-                val userToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token")
-                meetingService.userUpdate(userToken, MockData.newMeeting)
-            }
-        }
-    }
-
-    @Test
     fun `user does not update a meeting if student does not exist`() {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
                 val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
-                val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-                val sessionBean = sessionService.userCreate(
-                    userToken, MockData.newSession.copy(studentId = studentBean.id)
-                )
 
                 meetingService.userUpdate(
-                    userToken, MockData.newMeeting.copy(
-                        sessionId = sessionBean.id
-                    )
+                    userToken, MockData.newMeeting
                 )
             }
         }
@@ -181,14 +134,10 @@ class StudentMeetingServiceTest {
                 val userBean = userService.userRegister(MockData.newUser)
                 val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-                val sessionBean = sessionService.userCreate(
-                    userToken, MockData.newSession.copy(studentId = studentBean.id)
-                )
 
                 val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token-2")
                 meetingService.userUpdate(
                     otherToken, MockData.newMeeting.copy(
-                        sessionId = sessionBean.id,
                         studentId = studentBean.id
                     )
                 )
@@ -203,13 +152,10 @@ class StudentMeetingServiceTest {
                 val userBean = userService.userRegister(MockData.newUser)
                 val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-                val sessionBean = sessionService.userCreate(
-                    userToken, MockData.newSession.copy(studentId = studentBean.id)
-                )
+
                 meetingService.userUpdate(
                     userToken,
                     MockData.newMeeting.copy(
-                        sessionId = sessionBean.id,
                         studentId = studentBean.id,
                     )
                 )
@@ -223,12 +169,8 @@ class StudentMeetingServiceTest {
             val userBean = userService.userRegister(MockData.newUser)
             val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
-            val sessionBean = sessionService.userCreate(
-                userToken, MockData.newSession.copy(studentId = studentBean.id)
-            )
             val createdMeeting = meetingService.userCreate(
                 userToken, MockData.newMeeting.copy(
-                    sessionId = sessionBean.id,
                     studentId = studentBean.id
                 )
             )
@@ -236,7 +178,6 @@ class StudentMeetingServiceTest {
                 userToken,
                 MockData.newMeeting.copy(
                     id = createdMeeting.id,
-                    sessionId = sessionBean.id,
                     studentId = studentBean.id,
                     startAt = "2000-01-01T11:00:00"
                 )

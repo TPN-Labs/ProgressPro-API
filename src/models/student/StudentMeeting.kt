@@ -18,9 +18,7 @@ object StudentsMeetingsTable : UUIDTable("students_meetings") {
     val studentId: Column<EntityID<UUID>> = reference(
         "student_id", StudentsTable, onDelete = ReferenceOption.CASCADE
     )
-    val sessionId: Column<EntityID<UUID>> = reference(
-        "session_id", StudentsSessionsTable, onDelete = ReferenceOption.CASCADE
-    )
+    val firstInMonth: Column<Boolean> = bool("first_in_month").default(false)
     val startAt: Column<LocalDateTime> = datetime("start_at").default(LocalDateTime.now())
     val endAt: Column<LocalDateTime> = datetime("end_at").default(LocalDateTime.now())
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
@@ -32,9 +30,9 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var instructorId by StudentsMeetingsTable.instructorId
     var studentId by StudentsMeetingsTable.studentId
-    var sessionId by StudentsMeetingsTable.sessionId
     var startAt by StudentsMeetingsTable.startAt
     var endAt by StudentsMeetingsTable.endAt
+    var firstInMonth by StudentsMeetingsTable.firstInMonth
     var updatedAt by StudentsMeetingsTable.updatedAt
     var createdAt by StudentsMeetingsTable.createdAt
 
@@ -42,6 +40,7 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
         val id: String?,
         val studentId: String,
         val sessionId: String,
+        val firstInMonth: Boolean,
         val startAt: String,
         val endAt: String,
     )
@@ -49,13 +48,11 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
     data class Response(
         val id: String,
         val studentId: String,
-        val sessionId: String,
     ) {
         companion object {
             fun fromRow(row: StudentMeeting): Response = Response(
                 id = row.id.toString(),
                 studentId = row.studentId.toString(),
-                sessionId = row.sessionId.toString(),
             )
         }
     }
@@ -63,14 +60,13 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
     data class Page(
         val id: String,
         val student: Student.Response,
-        val session: StudentSession.Response,
         val startAt: LocalDateTime,
         val endAt: LocalDateTime,
+        val firstInMonth: Boolean,
     ) {
         companion object {
             fun fromDbRow(row: StudentMeeting): Page {
                 val student = Student.findById(row.studentId)!!
-                val session = StudentSession.findById(row.sessionId)!!
                 return Page(
                     id = row.id.toString(),
                     student = Student.Response(
@@ -78,16 +74,11 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
                         fullName = student.fullName,
                         avatar = student.avatar,
                     ),
-                    session = StudentSession.Response(
-                        id = row.sessionId.toString(),
-                        unit = session.unit,
-                        status = session.status
-                    ),
                     startAt = row.startAt,
-                    endAt = row.endAt
+                    endAt = row.endAt,
+                    firstInMonth = row.firstInMonth
                 )
             }
         }
     }
-
 }

@@ -5,8 +5,6 @@ import com.progressp.config.EMAIL_ADDRESS_PATTERN
 import com.progressp.config.MeasurementCode
 import com.progressp.database.IDatabaseFactory
 import com.progressp.models.student.StudentGender
-import com.progressp.models.student.StudentSessionStatus
-import com.progressp.models.student.StudentsSessionsTable
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.PreferenceName
 import com.progressp.models.user.UsersTable
@@ -20,10 +18,6 @@ class Preconditions(private val client: IDatabaseFactory) {
 
     fun checkIfMeasurementExists(measurementCode: String): Boolean {
         return MeasurementCode.values().any { it.toString().lowercase() == measurementCode }
-    }
-
-    fun checkIfValueIsValid(value: Int): Boolean {
-        return value >= 0
     }
 
     suspend fun checkIfUserExists(userId: String): Boolean {
@@ -62,15 +56,6 @@ class Preconditions(private val client: IDatabaseFactory) {
         return id in 0..APIConstants.TOTAL_AVATARS
     }
 
-    suspend fun checkIfSessionsExists(sessionId: String): Boolean {
-        return client.dbQuery {
-            val userInDatabase = StudentsSessionsTable.select {
-                (StudentsSessionsTable.id eq UUID.fromString(sessionId))
-            }.firstOrNull()
-            userInDatabase != null
-        }
-    }
-
     suspend fun checkIfStudentExists(studentId: String): Boolean {
         return client.dbQuery {
             val studentInDatabase = StudentsTable.select {
@@ -78,10 +63,6 @@ class Preconditions(private val client: IDatabaseFactory) {
             }.firstOrNull()
             studentInDatabase != null
         }
-    }
-
-    fun checkIfSessionStatusExists(status: Int): Boolean {
-        return StudentSessionStatus.values().any { it.code == status }
     }
 
     suspend fun checkIfUsernameExists(username: String): Boolean {
@@ -98,16 +79,6 @@ class Preconditions(private val client: IDatabaseFactory) {
                 (StudentsTable.id eq UUID.fromString(studentId))
             }.firstOrNull()
             studentInDb != null
-        }
-    }
-
-    suspend fun checkIfUserCanUpdateStudentSession(userId: String, sessionId: String): Boolean {
-        return client.dbQuery {
-            val sessionInDb = StudentsSessionsTable.select {
-                (StudentsSessionsTable.instructorId eq UUID.fromString(userId)) and
-                        (StudentsSessionsTable.id eq UUID.fromString(sessionId))
-            }.firstOrNull()
-            sessionInDb != null
         }
     }
 }
