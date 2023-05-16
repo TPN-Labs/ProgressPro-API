@@ -150,7 +150,6 @@ class StudentServiceTest {
                     gender = 1,
                     avatar = 2,
                     height = 2.0,
-                    knownFrom = "2022-01-01"
                 )
             )
             assertEquals("OtherName", updatedStudent.fullName)

@@ -4,14 +4,12 @@ import com.progressp.api.config.configApi
 import com.progressp.api.student.studentsApi
 import com.progressp.api.student.studentsMeetingsApi
 import com.progressp.api.student.studentsNoteApi
-import com.progressp.api.student.studentsSessionsApi
 import com.progressp.api.user.preferenceApi
 import com.progressp.api.user.usersApi
 import com.progressp.database.IDatabaseFactory
 import com.progressp.service.student.IStudentMeetingService
 import com.progressp.service.student.IStudentNoteService
 import com.progressp.service.student.IStudentService
-import com.progressp.service.student.IStudentSessionService
 import com.progressp.service.user.IPreferenceService
 import com.progressp.service.user.IUserService
 import io.ktor.server.routing.route
@@ -25,7 +23,6 @@ fun Route.api() {
     val preferenceService: IPreferenceService by inject()
     val studentService: IStudentService by inject()
     val studentMeetingService: IStudentMeetingService by inject()
-    val studentSessionService: IStudentSessionService by inject()
     val studentNoteService: IStudentNoteService by inject()
     val userService: IUserService by inject()
 
@@ -34,7 +31,6 @@ fun Route.api() {
         usersApi(userService)
         studentsApi(studentService, dbService)
         studentsMeetingsApi(studentMeetingService, dbService)
-        studentsSessionsApi(studentSessionService, dbService)
         studentsNoteApi(studentNoteService, dbService)
         preferenceApi(preferenceService, dbService)
     }

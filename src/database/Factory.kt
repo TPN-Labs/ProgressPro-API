@@ -7,7 +7,6 @@ import com.newrelic.api.agent.Trace
 import com.progressp.config.DbContstants
 import com.progressp.models.student.StudentsMeetingsTable
 import com.progressp.models.student.StudentsNotesTable
-import com.progressp.models.student.StudentsSessionsTable
 import com.progressp.models.student.StudentsTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -71,7 +70,6 @@ class DatabaseFactory(
                 StudentsTable,
                 StudentsMeetingsTable,
                 StudentsNotesTable,
-                StudentsSessionsTable,
                 UsersTable,
             )
         }

@@ -12,7 +12,6 @@ import com.progressp.util.StudentNotFound
 import com.progressp.util.StudentNotYours
 import com.progressp.util.getUserDataFromJWT
 import org.jetbrains.exposed.sql.SortOrder
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.ArrayList
 import java.util.UUID
@@ -59,7 +58,6 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
                 gender = studentProps.gender
                 height = studentProps.height
                 avatar = studentProps.avatar
-                knownFrom = LocalDate.parse(studentProps.knownFrom)
                 createdAt = LocalDateTime.now()
                 updatedAt = LocalDateTime.now()
             }
@@ -86,7 +84,6 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
                 gender = studentProps.gender
                 height = studentProps.height
                 avatar = studentProps.avatar
-                knownFrom = LocalDate.parse(studentProps.knownFrom)
                 updatedAt = LocalDateTime.now()
             }
             Student.Response.fromRow(student)

@@ -9,7 +9,6 @@ import com.progressp.data.MockUUIDs.userList
 import com.progressp.models.student.Student
 import com.progressp.models.student.StudentMeeting
 import com.progressp.models.student.StudentNote
-import com.progressp.models.student.StudentSession
 import com.progressp.models.user.User
 
 object MockUUIDs {
@@ -45,13 +44,10 @@ object MockData {
         userList[0], "mock@email.com", "mock-username", "mock-pass"
     )
     val newStudent: Student.New = Student.New(
-        studentList[0], "Mock Name", 1, 1, 1.55, "2022-01-01"
-    )
-    val newSession: StudentSession.New = StudentSession.New(
-        sessionList[0], studentList[0], 1, 200, 12
+        studentList[0], "Mock Name", 1, 1, 1.55
     )
     val newMeeting: StudentMeeting.New = StudentMeeting.New(
-        meetingList[0], studentList[0], sessionList[0], "2022-01-01T10:00:00", "2022-01-01T11:00:00"
+        meetingList[0], studentList[0], sessionList[0], false, "2022-01-01T10:00:00", "2022-01-01T11:00:00"
     )
     val newNote: StudentNote.New = StudentNote.New(
         noteList[0], studentList[0], MeasurementCode.ARM.toString().lowercase(), 12.0, "2022-01-01"
