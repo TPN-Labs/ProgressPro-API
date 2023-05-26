@@ -3,6 +3,7 @@ package com.progressp.util
 import com.progressp.config.EMAIL_ADDRESS_PATTERN
 import com.progressp.config.MeasurementCode
 import com.progressp.database.IDatabaseFactory
+import com.progressp.models.student.StudentGender
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.PreferenceName
 import com.progressp.models.user.UsersTable
@@ -44,6 +45,10 @@ class Preconditions(private val client: IDatabaseFactory) {
 
     fun checkIfUsernameContainsOnlyLetters(username: String): Boolean {
         return username.all { it.isLetter() }
+    }
+
+    fun checkIfStudentGenderExists(gender: Int): Boolean {
+        return StudentGender.values().any { it.code == gender }
     }
 
     fun checkIfStudentMeetingsIsValid(totalMeetings: Int): Boolean {

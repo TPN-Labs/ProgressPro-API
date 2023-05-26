@@ -35,10 +35,10 @@ object MockUUIDs {
 
 object MockData {
     val newUser: User.Register = User.Register(
-        userList[0], "mock@email.com", "mock-username", "mock-pass"
+        userList[0], "mock@email.com", "mockUsername", "mock-pass"
     )
     val newStudent: Student.New = Student.New(
-        studentList[0], "Mock Name", 1
+        studentList[0], "Mock Name", 1, 1
     )
     val newMeeting: StudentMeeting.New = StudentMeeting.New(
         meetingList[0], studentList[0], false, "2022-01-01T10:00:00", "2022-01-01T11:00:00"

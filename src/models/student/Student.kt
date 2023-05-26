@@ -18,6 +18,7 @@ object StudentsTable : UUIDTable("students") {
     )
     val fullName: Column<String> = varchar("full_name", STRING_LENGTH)
     val totalMeetings: Column<Int> = integer("total_meetings")
+    val gender: Column<Int> = integer("gender")
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
 }
@@ -28,6 +29,7 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     var instructorId by StudentsTable.instructorId
     var fullName by StudentsTable.fullName
     var totalMeetings by StudentsTable.totalMeetings
+    var gender by StudentsTable.gender
     var updatedAt by StudentsTable.updatedAt
     var createdAt by StudentsTable.createdAt
 
@@ -35,6 +37,7 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
         val id: String?,
         val fullName: String,
         val totalMeetings: Int,
+        val gender: Int,
     )
 
     data class Delete(
@@ -45,12 +48,14 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
         val id: String,
         val fullName: String,
         val totalMeetings: Int,
+        val gender: Int,
     ) {
         companion object {
             fun fromDbRow(row: Student): Page = Page(
                 id = row.id.toString(),
                 fullName = row.fullName,
                 totalMeetings = row.totalMeetings,
+                gender = row.gender,
             )
         }
     }
@@ -59,13 +64,21 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
         val id: String,
         val fullName: String,
         val totalMeetings: Int,
+        val gender: Int,
     ) {
         companion object {
             fun fromRow(row: Student): Response = Response(
                 id = row.id.toString(),
                 fullName = row.fullName,
                 totalMeetings = row.totalMeetings,
+                gender = row.gender,
             )
         }
     }
+}
+
+enum class StudentGender(val code: Int) {
+    MALE(1),
+    FEMALE(2),
+    OTHER(3),
 }

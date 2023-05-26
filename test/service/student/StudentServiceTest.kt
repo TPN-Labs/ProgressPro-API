@@ -7,6 +7,7 @@ import com.progressp.models.student.Student
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.UsersTable
 import com.progressp.service.user.UserService
+import com.progressp.util.StudentGenderNotFound
 import com.progressp.util.StudentMeetingsIsInvalid
 import com.progressp.util.StudentNotFound
 import com.progressp.util.StudentNotYours
@@ -45,8 +46,18 @@ class StudentServiceTest {
     fun `user does not create a student if student meetings is invalid`() {
         runBlocking {
             assertFailsWith(StudentMeetingsIsInvalid::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
+                val userToken = progressJWT.sign(userList[0], 0, "mockUsernameToken")
                 studentService.userCreate(userToken, MockData.newStudent.copy(totalMeetings = 0))
+            }
+        }
+    }
+    
+    @Test
+    fun `user does not create a student if gender does not exist`() {
+        runBlocking {
+            assertFailsWith(StudentGenderNotFound::class) {
+                val userToken = progressJWT.sign(userList[0], 0, "mockUsernameToken")
+                studentService.userCreate(userToken, MockData.newStudent.copy(gender = 0))
             }
         }
     }
@@ -55,7 +66,7 @@ class StudentServiceTest {
     fun `user creates a student`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val result = studentService.userCreate(userToken, MockData.newStudent)
             assertNotNull(result)
         }
@@ -65,7 +76,7 @@ class StudentServiceTest {
     fun `user reads a page of results`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
 
             studentService.userCreate(userToken, MockData.newStudent)
             studentService.userCreate(userToken, MockData.newStudent)
@@ -75,11 +86,21 @@ class StudentServiceTest {
     }
 
     @Test
-    fun `user does not update a student if gender does not exist`() {
+    fun `user does not update a student if total meetings is invalid`() {
         runBlocking {
             assertFailsWith(StudentMeetingsIsInvalid::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
+                val userToken = progressJWT.sign(userList[0], 0, "mockUsernameToken")
                 studentService.userUpdate(userToken, MockData.newStudent.copy(totalMeetings = 0))
+            }
+        }
+    }
+
+    @Test
+    fun `user does not update a student if gender does not exist`() {
+        runBlocking {
+            assertFailsWith(StudentGenderNotFound::class) {
+                val userToken = progressJWT.sign(userList[0], 0, "mockUsernameToken")
+                studentService.userCreate(userToken, MockData.newStudent.copy(gender = 0))
             }
         }
     }
@@ -88,7 +109,7 @@ class StudentServiceTest {
     fun `user does not update a student if the user did not create it`() {
         runBlocking {
             assertFailsWith(StudentNotYours::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
+                val userToken = progressJWT.sign(userList[0], 0, "mockUsernameToken")
                 studentService.userUpdate(userToken, MockData.newStudent)
             }
         }
@@ -98,7 +119,7 @@ class StudentServiceTest {
     fun `user updates a student`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
 
             val createdStudent = studentService.userCreate(userToken, MockData.newStudent)
             val updatedStudent = studentService.userUpdate(userToken,
@@ -106,6 +127,7 @@ class StudentServiceTest {
                     id = createdStudent.id,
                     fullName = "OtherName",
                     totalMeetings = 1,
+                    gender = 1,
                 )
             )
             assertEquals("OtherName", updatedStudent.fullName)
@@ -117,7 +139,7 @@ class StudentServiceTest {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 studentService.userDelete(userToken, Student.Delete(MockData.newStudent.id!!))
             }
         }
@@ -127,7 +149,7 @@ class StudentServiceTest {
     fun `user deletes a student`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
 
             val createdStudent = studentService.userCreate(userToken, MockData.newStudent)
             studentService.userDelete(userToken, Student.Delete(createdStudent.id))
