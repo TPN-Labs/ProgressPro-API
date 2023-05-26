@@ -1,10 +1,8 @@
 package com.progressp.util
 
-import com.progressp.config.APIConstants
 import com.progressp.config.EMAIL_ADDRESS_PATTERN
 import com.progressp.config.MeasurementCode
 import com.progressp.database.IDatabaseFactory
-import com.progressp.models.student.StudentGender
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.PreferenceName
 import com.progressp.models.user.UsersTable
@@ -44,16 +42,12 @@ class Preconditions(private val client: IDatabaseFactory) {
         return PreferenceName.values().any { it.toString() == preferenceName }
     }
 
-    fun checkIfStudentGenderExists(gender: Int): Boolean {
-        return StudentGender.values().any { it.code == gender }
+    fun checkIfUsernameContainsOnlyLetters(username: String): Boolean {
+        return username.all { it.isLetter() }
     }
 
-    fun checkIfStudentHeightIsValid(height: Double): Boolean {
-        return height >= 0.0
-    }
-
-    fun checkIfStudentAvatarIsValid(id: Int): Boolean {
-        return id in 0..APIConstants.TOTAL_AVATARS
+    fun checkIfStudentMeetingsIsValid(totalMeetings: Int): Boolean {
+        return totalMeetings > 0
     }
 
     suspend fun checkIfStudentExists(studentId: String): Boolean {

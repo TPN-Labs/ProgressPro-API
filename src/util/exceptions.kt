@@ -26,24 +26,10 @@ class PreferenceNotFound(id: String) :
 class StudentNotFound(id: String) :
     ApiException("Student not found", "Student $id not found", HttpStatusCode.NotFound)
 
-class StudentGenderNotFound(userId: String, gender: Int) :
+class StudentMeetingsIsInvalid(userId: String, meetings: Int) :
     ApiException(
         "Student is invalid",
-        "User $userId submitted invalid gender $gender for student",
-        HttpStatusCode.BadRequest,
-    )
-
-class StudentHeightIsInvalid(userId: String, height: Double) :
-    ApiException(
-        "Student is invalid",
-        "User $userId submitted invalid height $height for student",
-        HttpStatusCode.BadRequest,
-    )
-
-class StudentAvatarIsInvalid(userId: String, avatarId: Int) :
-    ApiException(
-        "Student is invalid",
-        "User $userId submitted invalid avatar id $avatarId for student",
+        "User $userId submitted invalid meetings $meetings for student",
         HttpStatusCode.BadRequest,
     )
 
@@ -56,19 +42,6 @@ class StudentNoteNotFound(id: String) :
 class StudentNotYours(userId: String, studentId: String) :
     ApiException("Student not found", "User $userId tried to update student $studentId", HttpStatusCode.BadRequest)
 
-class StudentSessionNotFound(id: String) :
-    ApiException("Student session not found", "Student session $id not found", HttpStatusCode.NotFound)
-
-class StudentSessionTotalInvalid(value: Int) :
-    ApiException("Total value si invalid", "Value: $value is invalid", HttpStatusCode.BadRequest)
-
-class StudentSessionStatusInvalid(userId: String, status: Int) :
-    ApiException(
-        "Session status si invalid",
-        "User $userId tried to update a session with status $status",
-        HttpStatusCode.BadRequest
-    )
-
 class UserEmailExists(email: String) :
     ApiException("E-Mail already exists", "Email already exists: $email", HttpStatusCode.BadRequest)
 
@@ -77,6 +50,9 @@ class UserEmailInvalid(email: String) :
 
 class UsernameExists(user: String) :
     ApiException("Username already exists", "Username already exists: $user", HttpStatusCode.BadRequest)
+
+class UsernameIncorrect(username: String) :
+    ApiException("Username is invalid", "Username is invalid $username", HttpStatusCode.BadRequest)
 
 class UserIncorrectPassword :
     ApiException("Username or password incorrect", "User sent incorrect password", HttpStatusCode.BadRequest)

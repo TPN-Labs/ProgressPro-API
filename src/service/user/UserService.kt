@@ -19,6 +19,7 @@ import com.progressp.util.UserEmailInvalid
 import com.progressp.util.UserIncorrectPassword
 import com.progressp.util.UserNotFound
 import com.progressp.util.UsernameExists
+import com.progressp.util.UsernameIncorrect
 import com.progressp.util.getUserDataFromJWT
 import com.progressp.util.progressJWT
 import org.jetbrains.exposed.sql.SortOrder
@@ -66,6 +67,8 @@ class UserService(private val databaseFactory: IDatabaseFactory) : IUserService 
     }
 
     override suspend fun userRegister(newUser: User.Register): User.Response {
+        if(!Preconditions(databaseFactory).checkIfUsernameContainsOnlyLetters(newUser.username))
+            throw UsernameIncorrect(newUser.username)
         if (!Preconditions(databaseFactory).checkIfEmailIsValid(newUser.email)) throw UserEmailInvalid(newUser.email)
         if (Preconditions(databaseFactory).checkIfEmailExists(newUser.email)) throw UserEmailExists(newUser.email)
         if (Preconditions(databaseFactory).checkIfUsernameExists(newUser.username))

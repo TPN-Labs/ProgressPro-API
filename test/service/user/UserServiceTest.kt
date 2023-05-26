@@ -8,6 +8,7 @@ import com.progressp.util.UserEmailExists
 import com.progressp.util.UserEmailInvalid
 import com.progressp.util.UserIncorrectPassword
 import com.progressp.util.UsernameExists
+import com.progressp.util.UsernameIncorrect
 import com.progressp.util.getUserDataFromJWT
 import com.progressp.util.progressJWT
 import kotlinx.coroutines.runBlocking
@@ -43,6 +44,17 @@ class UserServiceTest {
             assertFailsWith(UserEmailInvalid::class) {
                 userService.userRegister(
                     newUser.copy(email = "invalidmail@")
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `it does not register an user with invalid username`() {
+        runBlocking {
+            assertFailsWith(UsernameIncorrect::class) {
+                userService.userRegister(
+                    newUser.copy(username = "username3with@invalidchar")
                 )
             }
         }

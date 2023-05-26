@@ -39,7 +39,6 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
     data class New(
         val id: String?,
         val studentId: String,
-        val sessionId: String,
         val firstInMonth: Boolean,
         val startAt: String,
         val endAt: String,
@@ -72,7 +71,7 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
                     student = Student.Response(
                         id = row.studentId.toString(),
                         fullName = student.fullName,
-                        avatar = student.avatar,
+                        totalMeetings = student.totalMeetings,
                     ),
                     startAt = row.startAt,
                     endAt = row.endAt,

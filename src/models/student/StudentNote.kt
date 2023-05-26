@@ -60,7 +60,7 @@ class StudentNote(id: EntityID<UUID>) : UUIDEntity(id) {
                     student = Student.Response(
                         id = row.studentId.toString(),
                         fullName = student.fullName,
-                        avatar = student.avatar,
+                        totalMeetings = student.totalMeetings,
                     ),
                     measurementName = row.measurementName,
                     measurementValue = row.measurementValue,
