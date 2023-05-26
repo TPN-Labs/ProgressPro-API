@@ -19,6 +19,7 @@ interface IStudentMeetingService {
     suspend fun userAll(token: String): ArrayList<StudentMeeting.Page>
     suspend fun userCreate(token: String, meetingProps: StudentMeeting.New): StudentMeeting.Response
     suspend fun userUpdate(token: String, meetingProps: StudentMeeting.New): StudentMeeting.Response
+    suspend fun userDelete(token: String, meetingProps: StudentMeeting.Delete): StudentMeeting.Response
 }
 
 class StudentMeetingService(private val databaseFactory: IDatabaseFactory) : IStudentMeetingService {
@@ -82,6 +83,19 @@ class StudentMeetingService(private val databaseFactory: IDatabaseFactory) : ISt
                 createdAt = LocalDateTime.now()
                 updatedAt = LocalDateTime.now()
             }
+            StudentMeeting.Response.fromRow(meeting)
+        }
+    }
+
+    override suspend fun userDelete(token: String, meetingProps: StudentMeeting.Delete): StudentMeeting.Response {
+        val tokenUserId = getUserDataFromJWT(token, "id") as String
+
+        if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, meetingProps.studentId))
+            throw StudentNotYours(tokenUserId, meetingProps.studentId)
+
+        return databaseFactory.dbQuery {
+            val meeting = getMeeting(meetingProps.id)
+            meeting.delete()
             StudentMeeting.Response.fromRow(meeting)
         }
     }

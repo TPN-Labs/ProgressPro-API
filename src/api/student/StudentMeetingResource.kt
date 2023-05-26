@@ -15,6 +15,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
+import io.ktor.server.routing.delete
 
 fun Route.studentsMeetingsApi(studentMeetingService: IStudentMeetingService, databaseFactory: IDatabaseFactory) {
 
@@ -48,6 +49,17 @@ fun Route.studentsMeetingsApi(studentMeetingService: IStudentMeetingService, dat
                     val token = call.request.authorization()?.removePrefix("Bearer ")!!
                     val bodyMeeting = call.receive<StudentMeeting.New>()
                     val student = studentMeetingService.userUpdate(token, bodyMeeting)
+                    call.respond(student)
+                }
+            }
+
+            newRelicTrace(
+                NewRelicTracing("StudentMeeting", "Delete")
+            ) {
+                delete("/my") {
+                    val token = call.request.authorization()?.removePrefix("Bearer ")!!
+                    val bodyStudent = call.receive<StudentMeeting.Delete>()
+                    val student = studentMeetingService.userDelete(token, bodyStudent)
                     call.respond(student)
                 }
             }
