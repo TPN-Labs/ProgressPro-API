@@ -48,7 +48,7 @@ class StudentMeetingServiceTest {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
 
                 meetingService.userCreate(
                     userToken, MockData.newMeeting
@@ -62,10 +62,10 @@ class StudentMeetingServiceTest {
         runBlocking {
             assertFailsWith(StudentNotYours::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
-                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token-2")
+                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken-2")
                 meetingService.userCreate(
                     otherToken, MockData.newMeeting.copy(
                         studentId = studentBean.id
@@ -79,7 +79,7 @@ class StudentMeetingServiceTest {
     fun `user creates a meeting`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
             val result = meetingService.userCreate(
                 userToken, MockData.newMeeting.copy(
@@ -94,7 +94,7 @@ class StudentMeetingServiceTest {
     fun `user reads a page of results`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
             meetingService.userCreate(
@@ -118,7 +118,7 @@ class StudentMeetingServiceTest {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
 
                 meetingService.userUpdate(
                     userToken, MockData.newMeeting
@@ -132,10 +132,10 @@ class StudentMeetingServiceTest {
         runBlocking {
             assertFailsWith(StudentNotYours::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
-                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token-2")
+                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken-2")
                 meetingService.userUpdate(
                     otherToken, MockData.newMeeting.copy(
                         studentId = studentBean.id
@@ -150,7 +150,7 @@ class StudentMeetingServiceTest {
         runBlocking {
             assertFailsWith(StudentMeetingNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
                 meetingService.userUpdate(
@@ -167,7 +167,7 @@ class StudentMeetingServiceTest {
     fun `user updates a meeting`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
             val createdMeeting = meetingService.userCreate(
                 userToken, MockData.newMeeting.copy(

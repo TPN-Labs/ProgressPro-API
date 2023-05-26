@@ -61,6 +61,7 @@ class StudentNote(id: EntityID<UUID>) : UUIDEntity(id) {
                         id = row.studentId.toString(),
                         fullName = student.fullName,
                         totalMeetings = student.totalMeetings,
+                        gender = student.gender,
                     ),
                     measurementName = row.measurementName,
                     measurementValue = row.measurementValue,

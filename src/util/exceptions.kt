@@ -33,6 +33,13 @@ class StudentMeetingsIsInvalid(userId: String, meetings: Int) :
         HttpStatusCode.BadRequest,
     )
 
+class StudentGenderNotFound(userId: String, gender: Int) :
+    ApiException(
+        "Student is invalid",
+        "User $userId submitted invalid gender $gender for student",
+        HttpStatusCode.BadRequest,
+    )
+
 class StudentMeetingNotFound(id: String) :
     ApiException("Meeting not found", "Meeting $id not found", HttpStatusCode.NotFound)
 

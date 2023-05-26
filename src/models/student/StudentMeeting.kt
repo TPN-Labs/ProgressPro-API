@@ -72,6 +72,7 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
                         id = row.studentId.toString(),
                         fullName = student.fullName,
                         totalMeetings = student.totalMeetings,
+                        gender = student.gender,
                     ),
                     startAt = row.startAt,
                     endAt = row.endAt,

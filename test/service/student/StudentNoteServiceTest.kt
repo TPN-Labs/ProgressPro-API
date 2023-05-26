@@ -49,7 +49,7 @@ class StudentNoteServiceTest {
     fun `user does not create a note if student does not exist`() {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
-                val userToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token")
+                val userToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken")
                 noteService.userCreate(userToken, MockData.newNote)
             }
         }
@@ -60,10 +60,10 @@ class StudentNoteServiceTest {
         runBlocking {
             assertFailsWith(StudentNotYours::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
-                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token-2")
+                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken-2")
                 noteService.userCreate(
                     otherToken, MockData.newNote.copy(studentId = studentBean.id)
                 )
@@ -76,7 +76,7 @@ class StudentNoteServiceTest {
         runBlocking {
             assertFailsWith(MeasurementCodeNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
                 noteService.userCreate(
                     userToken, MockData.newNote.copy(studentId = studentBean.id, measurementName = "something")
@@ -89,7 +89,7 @@ class StudentNoteServiceTest {
     fun `user creates a note`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
             val result = noteService.userCreate(
                 userToken, MockData.newNote.copy(studentId = studentBean.id)
@@ -102,7 +102,7 @@ class StudentNoteServiceTest {
     fun `user reads a page of results`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
             noteService.userCreate(
@@ -121,7 +121,7 @@ class StudentNoteServiceTest {
     fun `user does not update a note if student does not exist`() {
         runBlocking {
             assertFailsWith(StudentNotFound::class) {
-                val userToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token")
+                val userToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken")
                 noteService.userUpdate(userToken, MockData.newNote)
             }
         }
@@ -132,10 +132,10 @@ class StudentNoteServiceTest {
         runBlocking {
             assertFailsWith(StudentNotYours::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
-                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mock-username-token-2")
+                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken-2")
                 noteService.userUpdate(
                     otherToken, MockData.newNote.copy(studentId = studentBean.id)
                 )
@@ -148,7 +148,7 @@ class StudentNoteServiceTest {
         runBlocking {
             assertFailsWith(MeasurementCodeNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
                 noteService.userUpdate(
                     userToken, MockData.newNote.copy(studentId = studentBean.id, measurementName = "something")
@@ -162,7 +162,7 @@ class StudentNoteServiceTest {
         runBlocking {
             assertFailsWith(StudentNoteNotFound::class) {
                 val userBean = userService.userRegister(MockData.newUser)
-                val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
                 val studentBean = studentService.userCreate(userToken, MockData.newStudent)
 
                 noteService.userCreate(
@@ -183,7 +183,7 @@ class StudentNoteServiceTest {
     fun `user updates a note`() {
         runBlocking {
             val userBean = userService.userRegister(MockData.newUser)
-            val userToken = progressJWT.sign(userBean.id, 0, "mock-username-token")
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
             val studentBean = studentService.userCreate(userToken, MockData.newStudent)
             val createdNote = noteService.userCreate(
                 userToken, MockData.newNote.copy(studentId = studentBean.id)
