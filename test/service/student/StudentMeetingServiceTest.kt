@@ -3,6 +3,7 @@ package com.progressp.service.student
 import com.progressp.data.MockData
 import com.progressp.data.MockUUIDs
 import com.progressp.database.dbService
+import com.progressp.models.student.StudentMeeting
 import com.progressp.models.student.StudentsMeetingsTable
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.UsersTable
@@ -20,6 +21,7 @@ import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class StudentMeetingServiceTest {
@@ -183,6 +185,56 @@ class StudentMeetingServiceTest {
                 )
             )
             assertNotNull(updatedMeeting)
+        }
+    }
+
+    @Test
+    fun `user does not delete a meeting if student is not theirs`() {
+        runBlocking {
+            assertFailsWith(StudentNotYours::class) {
+                val userBean = userService.userRegister(MockData.newUser)
+                val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
+                val studentBean = studentService.userCreate(userToken, MockData.newStudent)
+
+                val otherToken = progressJWT.sign(MockUUIDs.userList[0], 0, "mockUsernameToken-2")
+                val createdMeeting = meetingService.userCreate(
+                    userToken, MockData.newMeeting.copy(
+                        studentId = studentBean.id
+                    )
+                )
+                meetingService.userDelete(
+                    otherToken,
+                    StudentMeeting.Delete(
+                        createdMeeting.id,
+                        studentBean.id
+                    )
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `user deletes a meeting`() {
+        runBlocking {
+            val userBean = userService.userRegister(MockData.newUser)
+            val userToken = progressJWT.sign(userBean.id, 0, "mockUsernameToken")
+            val studentBean = studentService.userCreate(userToken, MockData.newStudent)
+            val createdMeeting = meetingService.userCreate(
+                userToken, MockData.newMeeting.copy(
+                    studentId = studentBean.id
+                )
+            )
+            meetingService.userDelete(
+                userToken,
+                StudentMeeting.Delete(
+                    createdMeeting.id,
+                    studentBean.id
+                )
+            )
+            dbService.dbQuery {
+                val result = StudentMeeting.findById(UUID.fromString(createdMeeting.id))
+                assertNull(result)
+            }
         }
     }
 }

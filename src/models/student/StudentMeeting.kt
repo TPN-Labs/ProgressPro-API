@@ -44,6 +44,11 @@ class StudentMeeting(id: EntityID<UUID>) : UUIDEntity(id) {
         val endAt: String,
     )
 
+    data class Delete(
+        val id: String,
+        val studentId: String,
+    )
+
     data class Response(
         val id: String,
         val studentId: String,

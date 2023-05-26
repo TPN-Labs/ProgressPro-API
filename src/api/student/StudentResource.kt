@@ -63,7 +63,6 @@ fun Route.studentsApi(studentService: IStudentService, databaseFactory: IDatabas
                     call.respond(student)
                 }
             }
-
         }
     }
 }
