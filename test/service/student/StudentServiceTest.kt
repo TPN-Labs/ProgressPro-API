@@ -7,9 +7,7 @@ import com.progressp.models.student.Student
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.UsersTable
 import com.progressp.service.user.UserService
-import com.progressp.util.StudentAvatarIsInvalid
-import com.progressp.util.StudentGenderNotFound
-import com.progressp.util.StudentHeightIsInvalid
+import com.progressp.util.StudentMeetingsIsInvalid
 import com.progressp.util.StudentNotFound
 import com.progressp.util.StudentNotYours
 import com.progressp.util.progressJWT
@@ -44,31 +42,11 @@ class StudentServiceTest {
     }
 
     @Test
-    fun `user does not create a student if gender does not exist`() {
+    fun `user does not create a student if student meetings is invalid`() {
         runBlocking {
-            assertFailsWith(StudentGenderNotFound::class) {
+            assertFailsWith(StudentMeetingsIsInvalid::class) {
                 val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
-                studentService.userCreate(userToken, MockData.newStudent.copy(gender = 0))
-            }
-        }
-    }
-
-    @Test
-    fun `user does not create a student if height is invalid`() {
-        runBlocking {
-            assertFailsWith(StudentHeightIsInvalid::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
-                studentService.userCreate(userToken, MockData.newStudent.copy(height = -1.0))
-            }
-        }
-    }
-
-    @Test
-    fun `user does not create a student if avatar is invalid`() {
-        runBlocking {
-            assertFailsWith(StudentAvatarIsInvalid::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
-                studentService.userCreate(userToken, MockData.newStudent.copy(avatar = -1))
+                studentService.userCreate(userToken, MockData.newStudent.copy(totalMeetings = 0))
             }
         }
     }
@@ -99,29 +77,9 @@ class StudentServiceTest {
     @Test
     fun `user does not update a student if gender does not exist`() {
         runBlocking {
-            assertFailsWith(StudentGenderNotFound::class) {
+            assertFailsWith(StudentMeetingsIsInvalid::class) {
                 val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
-                studentService.userUpdate(userToken, MockData.newStudent.copy(gender = 0))
-            }
-        }
-    }
-
-    @Test
-    fun `user does not update a student if height is invalid`() {
-        runBlocking {
-            assertFailsWith(StudentHeightIsInvalid::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
-                studentService.userUpdate(userToken, MockData.newStudent.copy(height = -1.0))
-            }
-        }
-    }
-
-    @Test
-    fun `user does not update a student if avatar is invalid`() {
-        runBlocking {
-            assertFailsWith(StudentAvatarIsInvalid::class) {
-                val userToken = progressJWT.sign(userList[0], 0, "mock-username-token")
-                studentService.userUpdate(userToken, MockData.newStudent.copy(avatar = -1))
+                studentService.userUpdate(userToken, MockData.newStudent.copy(totalMeetings = 0))
             }
         }
     }
@@ -147,9 +105,7 @@ class StudentServiceTest {
                 Student.New(
                     id = createdStudent.id,
                     fullName = "OtherName",
-                    gender = 1,
-                    avatar = 2,
-                    height = 2.0,
+                    totalMeetings = 1,
                 )
             )
             assertEquals("OtherName", updatedStudent.fullName)

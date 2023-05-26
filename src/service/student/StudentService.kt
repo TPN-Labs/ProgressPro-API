@@ -5,9 +5,7 @@ import com.progressp.models.student.Student
 import com.progressp.models.student.StudentsTable
 import com.progressp.models.user.User
 import com.progressp.util.Preconditions
-import com.progressp.util.StudentAvatarIsInvalid
-import com.progressp.util.StudentGenderNotFound
-import com.progressp.util.StudentHeightIsInvalid
+import com.progressp.util.StudentMeetingsIsInvalid
 import com.progressp.util.StudentNotFound
 import com.progressp.util.StudentNotYours
 import com.progressp.util.getUserDataFromJWT
@@ -44,20 +42,14 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
     override suspend fun userCreate(token: String, studentProps: Student.New): Student.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 
-        if (!Preconditions(databaseFactory).checkIfStudentGenderExists(studentProps.gender))
-            throw StudentGenderNotFound(tokenUserId, studentProps.gender)
-        if (!Preconditions(databaseFactory).checkIfStudentAvatarIsValid(studentProps.avatar))
-            throw StudentAvatarIsInvalid(tokenUserId, studentProps.avatar)
-        if (!Preconditions(databaseFactory).checkIfStudentHeightIsValid(studentProps.height))
-            throw StudentHeightIsInvalid(tokenUserId, studentProps.height)
+        if (!Preconditions(databaseFactory).checkIfStudentMeetingsIsValid(studentProps.totalMeetings))
+            throw StudentMeetingsIsInvalid(tokenUserId, studentProps.totalMeetings)
 
         return databaseFactory.dbQuery {
             val student = Student.new {
                 instructorId = User.findById(UUID.fromString(tokenUserId))!!.id
                 fullName = studentProps.fullName
-                gender = studentProps.gender
-                height = studentProps.height
-                avatar = studentProps.avatar
+                totalMeetings = studentProps.totalMeetings
                 createdAt = LocalDateTime.now()
                 updatedAt = LocalDateTime.now()
             }
@@ -68,12 +60,8 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
     override suspend fun userUpdate(token: String, studentProps: Student.New): Student.Response {
         val tokenUserId = getUserDataFromJWT(token, "id") as String
 
-        if (!Preconditions(databaseFactory).checkIfStudentGenderExists(studentProps.gender))
-            throw StudentGenderNotFound(tokenUserId, studentProps.gender)
-        if (!Preconditions(databaseFactory).checkIfStudentHeightIsValid(studentProps.height))
-            throw StudentHeightIsInvalid(tokenUserId, studentProps.height)
-        if (!Preconditions(databaseFactory).checkIfStudentAvatarIsValid(studentProps.avatar))
-            throw StudentAvatarIsInvalid(tokenUserId, studentProps.avatar)
+        if (!Preconditions(databaseFactory).checkIfStudentMeetingsIsValid(studentProps.totalMeetings))
+            throw StudentMeetingsIsInvalid(tokenUserId, studentProps.totalMeetings)
         if (!Preconditions(databaseFactory).checkIfUserCanUpdateStudent(tokenUserId, studentProps.id!!))
             throw StudentNotYours(tokenUserId, studentProps.id)
 
@@ -81,9 +69,7 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
             val student = getStudent(studentProps.id)
             student.apply {
                 fullName = studentProps.fullName
-                gender = studentProps.gender
-                height = studentProps.height
-                avatar = studentProps.avatar
+                totalMeetings = studentProps.totalMeetings
                 updatedAt = LocalDateTime.now()
             }
             Student.Response.fromRow(student)
@@ -104,7 +90,7 @@ class StudentService(private val databaseFactory: IDatabaseFactory) : IStudentSe
             Student.Response(
                 id = student.id.toString(),
                 fullName = student.fullName,
-                avatar = student.avatar,
+                totalMeetings = student.totalMeetings,
             )
         }
     }

@@ -17,9 +17,7 @@ object StudentsTable : UUIDTable("students") {
         "instructor_id", UsersTable, onDelete = ReferenceOption.CASCADE
     )
     val fullName: Column<String> = varchar("full_name", STRING_LENGTH)
-    val gender: Column<Int> = integer("gender")
-    val avatar: Column<Int> = integer("avatar")
-    val height: Column<Double> = double("height")
+    val totalMeetings: Column<Int> = integer("total_meetings")
     val updatedAt: Column<LocalDateTime> = datetime("updated_at").default(LocalDateTime.now())
     val createdAt: Column<LocalDateTime> = datetime("created_at").default(LocalDateTime.now())
 }
@@ -29,18 +27,14 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var instructorId by StudentsTable.instructorId
     var fullName by StudentsTable.fullName
-    var gender by StudentsTable.gender
-    var avatar by StudentsTable.avatar
-    var height by StudentsTable.height
+    var totalMeetings by StudentsTable.totalMeetings
     var updatedAt by StudentsTable.updatedAt
     var createdAt by StudentsTable.createdAt
 
     data class New(
         val id: String?,
         val fullName: String,
-        val avatar: Int,
-        val gender: Int,
-        val height: Double,
+        val totalMeetings: Int,
     )
 
     data class Delete(
@@ -50,17 +44,13 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     data class Page(
         val id: String,
         val fullName: String,
-        val avatar: Int,
-        val gender: Int,
-        val height: Double,
+        val totalMeetings: Int,
     ) {
         companion object {
             fun fromDbRow(row: Student): Page = Page(
                 id = row.id.toString(),
                 fullName = row.fullName,
-                avatar = row.avatar,
-                gender = row.gender,
-                height = row.height,
+                totalMeetings = row.totalMeetings,
             )
         }
     }
@@ -68,20 +58,14 @@ class Student(id: EntityID<UUID>) : UUIDEntity(id) {
     data class Response(
         val id: String,
         val fullName: String,
-        val avatar: Int,
+        val totalMeetings: Int,
     ) {
         companion object {
             fun fromRow(row: Student): Response = Response(
                 id = row.id.toString(),
                 fullName = row.fullName,
-                avatar = row.avatar,
+                totalMeetings = row.totalMeetings,
             )
         }
     }
-}
-
-enum class StudentGender(val code: Int) {
-    MALE(1),
-    FEMALE(2),
-    OTHER(3),
 }
